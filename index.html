@@ -7,7 +7,22 @@
 </head>
 <body>
     <h1>Coinjoin coordination & support for Wasabi Wallet by Kruw</h1>
-    <p>I am coordinating Wasabi Wallet coinjoins for *FREE*! To participate, paste this in your settings: https://btcpay.kruw.io/plugins/wabisabi-coordinator/</p>
+    <p>I am coordinating Wasabi Wallet coinjoins for *FREE*! To participate, paste this in your settings:</p>
+    <code id="copyText">https://btcpay.kruw.io/plugins/wabisabi-coordinator/</code>
+    <button onclick="copyToClipboard()">Copy</button>
+
+    <script>
+        function copyToClipboard() {
+            var copyText = document.getElementById("copyText");
+            var tempInput = document.createElement("input");
+            tempInput.value = copyText.textContent;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+            alert("Copied the text: " + tempInput.value);
+        }
+    </script>
 
  <h2>Go to the Coordinator Settings from the coinjoin status box</h2>
     <img src="https://raw.githubusercontent.com/Kruwed/kruwed.github.io/master/images/Shortcut.png" alt="Change coordinator" style="max-width: 100%; height: auto;">
