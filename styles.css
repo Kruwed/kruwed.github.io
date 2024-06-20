@@ -44,7 +44,7 @@ nav ul li a:hover {
     max-width: 800px; /* Maximum width of the content */
     margin: 20px auto; /* Center the content */
     padding: 20px; /* Padding inside the content area */
-    background-color: rgba(255, 255, 255, 0.8); /* Background color with opacity */
+    background-color: white; /* Background color of the content (solid white) */
     border-left: 1px solid #ccc; /* Left border */
     border-right: 1px solid #ccc; /* Right border */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: Add some shadow for depth */
