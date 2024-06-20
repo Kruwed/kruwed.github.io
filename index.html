@@ -40,6 +40,27 @@
             document.body.removeChild(tempInput);
         }
     </script>
+ <footer id="footer">
+        <p>&copy; Kruw.io</p>
+    </footer>
+
+    <script>
+        // Function to show or hide the footer based on scroll position
+        function toggleFooter() {
+            var footer = document.getElementById('footer');
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+                footer.style.display = 'block';
+            } else {
+                footer.style.display = 'none';
+            }
+        }
+
+        // Add scroll event listener to toggle footer visibility
+        window.addEventListener('scroll', toggleFooter);
+
+        // Initial call to set footer visibility on page load
+        toggleFooter();
+    </script>
 </body>
 </html>
 
