@@ -65,9 +65,9 @@ code {
 
 a {
     color: inherit; /* Inherit the color from the parent element */
-    text-decoration: none; /* Remove underline from links */
+    text-decoration: underline; /* Add underline to links */
 }
 
 a:hover {
-    text-decoration: underline; /* Add underline on hover */
+    text-decoration: none; /* Remove underline on hover */
 }
