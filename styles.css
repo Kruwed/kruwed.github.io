@@ -1,12 +1,15 @@
+/* styles.css */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 20px;
+    padding: 0;
     background-color: #f0f0f0;
-    
+}
+
 h1 {
     color: #333;
 }
+
 nav {
     background-color: #333;
     overflow: hidden;
@@ -34,4 +37,26 @@ nav ul li a:hover {
     background-color: #111;
 }
 
+.content {
+    max-width: 800px; /* Maximum width of the content */
+    margin: 20px auto; /* Center the content */
+    padding: 20px; /* Padding inside the content area */
+    background-color: white; /* Background color of the content */
+    border-left: 1px solid #ccc; /* Left border */
+    border-right: 1px solid #ccc; /* Right border */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: Add some shadow for depth */
 }
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+code {
+    background-color: #f4f4f4;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 3px;
+}
+
