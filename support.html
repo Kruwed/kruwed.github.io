@@ -32,6 +32,29 @@
            When recovering your wallet using the 12 word seed phrase, you have to use the exact same password/passphrase that you chose when creating the original wallet. Your password/passphrase acts as the "13th word" of your recovery seed.
         </p>
     </div>
+
+ <footer id="footer">
+        <p><a href="https://wasabiwallet.io/">Wasabi Wallet</a> | <a href="https://docs.btcpayserver.org/Wabisabi/">BTCPay Server</a></p>
+    </footer>
+
+    <script>
+        // Function to show or hide the footer based on scroll position
+        function toggleFooter() {
+            var footer = document.getElementById('footer');
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+                footer.style.display = 'block';
+            } else {
+                footer.style.display = 'none';
+            }
+        }
+
+        // Add scroll event listener to toggle footer visibility
+        window.addEventListener('scroll', toggleFooter);
+
+        // Initial call to set footer visibility on page load
+        toggleFooter();
+    </script>
+    
 </body>
 </html>
 
