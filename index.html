@@ -20,10 +20,6 @@
         <code id="copyText">https://btcpay.kruw.io/plugins/wabisabi-coordinator/</code>
         <button onclick="copyToClipboard()">Copy</button>
 
-        <h2>Round Information</h2>
-        <p>Current Input Count: <span id="inputCount">Loading...</span></p>
-        <p>Input Registration Remaining: <span id="inputRegistrationRemaining">Loading...</span></p>
-
         <h2>Go to the Coordinator Settings from the coinjoin status box</h2>
         <img src="https://raw.githubusercontent.com/Kruwed/kruwed.github.io/master/images/Shortcut.png" alt="Change coordinator" style="max-width: 100%; height: auto;">
 
@@ -41,33 +37,7 @@
             document.execCommand("copy");
             document.body.removeChild(tempInput);
         }
-
-        function fetchRoundData() {
-            fetch('https://btcpay.kruw.io/plugins/wabisabi-coordinator/wabisabi/human-monitor')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok ' + response.statusText);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Fetched data:', data);  // Debugging line
-                    const roundData = data.RoundStates[0];
-                    document.getElementById('inputCount').textContent = roundData.InputCount;
-                    document.getElementById('inputRegistrationRemaining').textContent = roundData.InputRegistrationRemaining;
-                })
-                .catch(error => {
-                    console.error('Error fetching round data:', error);
-                    document.getElementById('inputCount').textContent = 'Error';
-                    document.getElementById('inputRegistrationRemaining').textContent = 'Error';
-                });
-        }
-
-        // Fetch the data immediately when the page loads
-        window.onload = fetchRoundData;
-
-        // Optionally, refresh the data every 60 seconds
-        setInterval(fetchRoundData, 60000);
     </script>
 </body>
 </html>
+
