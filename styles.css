@@ -62,3 +62,12 @@ code {
     padding: 5px;
     border-radius: 3px;
 }
+
+a {
+    color: inherit; /* Inherit the color from the parent element */
+    text-decoration: none; /* Remove underline from links */
+}
+
+a:hover {
+    text-decoration: underline; /* Add underline on hover */
+}
