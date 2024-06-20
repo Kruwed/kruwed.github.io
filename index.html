@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wasabi Wallet Coinjoin Coordinator</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -19,11 +20,24 @@
         <code id="copyText">https://btcpay.kruw.io/plugins/wabisabi-coordinator/</code>
         <button onclick="copyToClipboard()">Copy</button>
 
+        <h2>Round Information</h2>
+        <p>Current Input Count: <span id="inputCount">Loading...</span></p>
+        <p>Input Registration Remaining: <span id="inputRegistrationRemaining">Loading...</span></p>
+
         <h2>Go to the Coordinator Settings from the coinjoin status box</h2>
         <img src="https://raw.githubusercontent.com/Kruwed/kruwed.github.io/master/images/Shortcut.png" alt="Change coordinator" style="max-width: 100%; height: auto;">
 
         <h2>Paste the connection info and click the "Restart Wasabi" text</h2>
         <img src="https://raw.githubusercontent.com/Kruwed/kruwed.github.io/master/images/Switch%20Coordinator.png" alt="Restart Wasabi" style="max-width: 100%; height: auto;">
+
+        <h2>Need support?</h2>
+        <p>
+            Github: <a href="https://github.com/WalletWasabi/WalletWasabi/discussions">https://github.com/WalletWasabi/WalletWasabi/discussions</a><br>
+            Telegram: <a href="https://t.me/wasabiwallet">https://t.me/wasabiwallet</a><br>
+            Discord: <a href="https://discord.gg/nm7YHEZnJs">https://discord.gg/nm7YHEZnJs</a><br>
+            Reddit: <a href="https://www.reddit.com/r/WasabiWallet/">https://www.reddit.com/r/WasabiWallet/</a><br>
+            Bitcointalk: <a href="https://bitcointalk.org/index.php?topic=5476197.0">https://bitcointalk.org/index.php?topic=5476197.0</a>
+        </p>
     </div>
     <script>
         function copyToClipboard() {
@@ -35,6 +49,26 @@
             document.execCommand("copy");
             document.body.removeChild(tempInput);
         }
+
+        function fetchRoundData() {
+            fetch('https://btcpay.kruw.io/plugins/wabisabi-coordinator/wabisabi/human-monitor')
+                .then(response => response.json())
+                .then(data => {
+                    const roundData = data.RoundStates[0];
+                    document.getElementById('inputCount').textContent = roundData.InputCount;
+                    document.getElementById('inputRegistrationRemaining').textContent = roundData.InputRegistrationRemaining;
+                })
+                .catch(error => {
+                    console.error('Error fetching round data:', error);
+                });
+        }
+
+        // Fetch the data immediately when the page loads
+        window.onload = fetchRoundData;
+
+        // Optionally, refresh the data every 60 seconds
+        setInterval(fetchRoundData, 60000);
     </script>
 </body>
 </html>
+
