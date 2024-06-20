@@ -44,14 +44,22 @@
 
         function fetchRoundData() {
             fetch('https://btcpay.kruw.io/plugins/wabisabi-coordinator/wabisabi/human-monitor')
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
                 .then(data => {
+                    console.log('Fetched data:', data);  // Debugging line
                     const roundData = data.RoundStates[0];
                     document.getElementById('inputCount').textContent = roundData.InputCount;
                     document.getElementById('inputRegistrationRemaining').textContent = roundData.InputRegistrationRemaining;
                 })
                 .catch(error => {
                     console.error('Error fetching round data:', error);
+                    document.getElementById('inputCount').textContent = 'Error';
+                    document.getElementById('inputRegistrationRemaining').textContent = 'Error';
                 });
         }
 
@@ -63,4 +71,3 @@
     </script>
 </body>
 </html>
-
