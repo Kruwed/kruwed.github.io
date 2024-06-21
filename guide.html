@@ -29,7 +29,7 @@
         </p>
         <h2>Synchronization privacy</h2>
         <p>
-          In order to know how much money is in your wallet, you need to know the current state of the Bitcoin blockchain. This requires either running a full node to check yourself (like BTCPay Server) or asking someone else's full node to check for you. Many light wallets share your entire transaction history to the server of a provider to look up your balance. This can leak even more information to the server than what is already visible on the blockchain.<br>
+          In order to know how much money is in your wallet, you need to know the current state of the Bitcoin blockchain. This requires either running a full node to check yourself (like BTCPay Server) or asking someone else's full node to check for you. Many light wallets share your entire transaction history with the server of a provider to look up your balance. This can leak even more information about your transactions to the server than what is already publicly visible on the blockchain.<br>
           <br>
           Wasabi Wallet synchronizes in a lightweight way without your sharing addresses with anyone. <a href="https://github.com/bitcoin/bips/blob/master/bip-0157.mediawiki">BIP157</a> and <a href="https://github.com/bitcoin/bips/blob/master/bip-0158.mediawiki">BIP158</a> describe how compact block filters are used to reduce the amount of data required to synchronize by ~99%. Your client scans these filters for transactions that belong to you and downloads the blocks that contain them.
         </p>
