@@ -33,6 +33,10 @@
           <br>
           Wasabi Wallet synchronizes in a lightweight way without your sharing addresses with anyone. <a href="https://github.com/bitcoin/bips/blob/master/bip-0157.mediawiki">BIP157</a> and <a href="https://github.com/bitcoin/bips/blob/master/bip-0158.mediawiki">BIP158</a> describe how compact block filters are used to reduce the amount of data required to synchronize by ~99%. Your client scans these filters for transactions that belong to you and downloads the exact blocks that contain them.
         </p>
+                <h2>Coinjoin transactions</h2>
+        <p>
+          A coinjoin transaction combines inputs from multiple users into the same transaction. Outputs are created with identical values for maximum privacy. Large coinjoin transactions with many inputs provide a greater amount privacy compared to small coinjoin transactions with few inputs.
+        </p>
     </div>
  <footer id="footer">
         <p><a href="https://wasabiwallet.io/">Wasabi Wallet</a> | <a href="https://docs.btcpayserver.org/Wabisabi/">BTCPay Server</a> | <a href="https://btcpay.kruw.io/plugins/wabisabi-coordinator/wabisabi/human-monitor">Coinjoin Round Status</a></p>
