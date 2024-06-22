@@ -45,7 +45,7 @@ nav ul li a:hover {
 }
 
 .content {
-    max-width: 800px; /* Maximum width of the content */
+    max-width: 1000px; /* Maximum width of the content */
     margin: 20px auto; /* Center the content */
     padding: 20px; /* Padding inside the content area */
     background-color: white; /* Background color of the content (solid white) */
