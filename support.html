@@ -30,7 +30,7 @@
         
         <h2>I tried to recover my wallet, why is the transaction history blank?</h2>
         <p>
-           When recovering your wallet using the 12 word seed phrase, you have to use the exact same password/passphrase that you chose when creating the original wallet. The password/passphrase acts as the "13th word" of your recovery seed.
+           When recovering your wallet using the 12 word seed phrase, you have to use the exact same password/passphrase that you chose when creating the original wallet. The password/passphrase acts as the "13th word" of your recovery seed, write it down and do not forget it.
         </p>
         <h2>Why is my transaction taking a long time to confirm?</h2>
         <p>
@@ -46,7 +46,7 @@
 
         <h2>Why does it say "skipping a round for better privacy"?</h2>
         <p>
-        Skipping rounds is a feature that smooths out liquidity, saves on mining fees, and increases randomness. You can disable random round skipping by going into your Wallet json file (search "Wallet Folder" in Wasabi's searchbar), looking for the line "CoinjoinSkipFactors": "0.7_0.8_0.9", and replacing it with "CoinjoinSkipFactors": "1_1_1",
+        Skipping rounds is a feature that smooths out liquidity, saves on mining fees, and increases randomness. You can disable random round skipping by going into your wallet's .json file by searching "Wallet Folder" in Wasabi's searchbar. From here, find the line <code>"CoinjoinSkipFactors": "0.7_0.8_0.9",</code> and replace it with <code>"CoinjoinSkipFactors": "1_1_1",</code>
         </p>
 
         <h2>My privacy progress is stuck at 99%, why does it say "Insufficient funds eligible for coinjoin"?</h2>
