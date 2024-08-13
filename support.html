@@ -34,12 +34,12 @@
         </p>
         <h2>Why is my transaction taking a long time to confirm?</h2>
         <p>
-           Miners choose to confirm the highest bidding transactions based on their fee rate (measured in sats/vbyte). Each additional input and output included in a transaction increases its size, which requires more fees to be paid. You can add fees to speed up an unconfirmed transaction. However, unconfirmed coinjoins are very large and therefore expensive to speed up.
+           Miners choose to confirm the highest bidding transactions based on their fee rate (measured in sats/vbyte). You can add fees to speed up an unconfirmed transaction by clicking the rocket icon in your transaction history. Each additional input and output included in a transaction increases its size, which requires more fees to be paid. Coinjoins are very large transactions with many inputs and outputs, so it is expensive to speed them up.
         </p>
 
         <h2>My privacy progress is stuck at 99%, why does it say "Insufficient funds eligible for coinjoin"?</h2>
         <p>
-        A UTXO must have a value of 0.00005000 BTC or greater to be eligible to coinjoin. If you are stuck at 99% privacy progress, check the "Wallet Coins" menu to see if you have a UTXO with a value that is too low to participate. Hovering over the shield icon in the transaction preview screen helps you avoid creating small change UTXOs from payments you send.
+        A UTXO must have a value of at least 0.00005000 BTC to be eligible to coinjoin. If you are stuck at 99% privacy progress, check the "Wallet Coins" menu to see if you have a UTXO with a value that is too low to participate. Hovering over the shield icon in the transaction preview screen helps you avoid creating small change UTXOs from payments you send.
         </p>
 
         <h2>The timer in the coinjoin box counted down and then reset, why didn't my privacy progress % increase?</h2>
@@ -49,7 +49,7 @@
 
         <h2>Why does it say "skipping a round for better privacy"?</h2>
         <p>
-        Skipping rounds is a feature that smooths out liquidity, saves on mining fees, and increases randomness for better privacy. You can disable round skipping by going into your Wallet json file (search "Wallet Folder" in Wasabi's searchbar) and editing the skip factors to 1: "CoinjoinSkipFactors": "1_1_1",
+        Skipping rounds is a feature that smooths out liquidity, saves on mining fees, and increases randomness. You can disable round skipping by going into your Wallet json file (search "Wallet Folder" in Wasabi's searchbar), looking for the line "CoinjoinSkipFactors": "0.7_0.8_0.9", and replacing it with "CoinjoinSkipFactors": "1_1_1",
         </p>
 
     </div>
