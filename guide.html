@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bitcoin Privacy Guide</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .video-container {
+            text-align: center; /* Center the videos and captions */
+            margin-bottom: 40px; /* Add space between video sections */
+        }
+        iframe {
+            max-width: 100%; /* Responsive video */
+            height: auto;
+        }
+    </style>
 </head>
 <body>
     <nav>
@@ -35,17 +45,20 @@
         </p>
         <h2>Blockchain privacy</h2>
         <p>
-          A coinjoin transaction combines inputs from multiple users into the same transaction. Outputs are created with identical values to maximize privacy. Large coinjoin transactions with many inputs provide a greater amount privacy compared to small coinjoin transactions with few inputs.<br>
-          <br>
-          Coinjoin explained:
+          A coinjoin transaction combines inputs from multiple users into the same transaction. Outputs are created with identical values to maximize privacy. Large coinjoin transactions with many inputs provide a greater amount of privacy compared to small coinjoin transactions with few inputs.
         </p>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/dGATztn5Ql8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        
-        <p><br>Coinjoin remixing:</p>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/Kmwmo86MgvQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+        <div class="video-container">
+            <p>Coinjoin explained:</p>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/dGATztn5Ql8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+
+        <div class="video-container">
+            <p>Coinjoin remixing:</p>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/Kmwmo86MgvQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
 
         <p>
-            <br>
             You can read more about the WabiSabi coinjoin protocol from the <a href="https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2022-April/020202.html">mailing list post</a> and the <a href="https://eprint.iacr.org/2021/206.pdf">research paper.</a>
         </p>
     </div>
