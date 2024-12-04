@@ -1,1 +1,1 @@
-Information webpage for coinjoin coordination.
+Information webpage for Bitcoin privacy.
