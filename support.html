@@ -47,11 +47,6 @@ There are many scammers impersonating admins and moderators on these platforms -
         All of the participants in a coinjoin have to sign it in order for the transaction to be valid. If someone enters a coinjoin and disconnects before signing it, it will cause the timer to reset for the other participants. Non-signers are temporarily blocked from participating in the next round, so honest users with stable Internet connections will eventually build a successful coinjoin.
         </p>
 
-        <h2>Why does it say "skipping a round for better privacy"?</h2>
-        <p>
-        Skipping rounds is a feature that smooths out liquidity, saves on mining fees, and increases randomness. You can manually disable random round skipping from your wallet's .json file by searching "Wallet Folder" in Wasabi's searchbar. From here, find the line <code>"CoinjoinSkipFactors": "0.7_0.8_0.9",</code> and replace it with <code>"CoinjoinSkipFactors": "1_1_1",</code>
-        </p>
-
         <h2>My privacy progress is stuck at 99%, why does it say "Insufficient funds eligible for coinjoin"?</h2>
         <p>
         A UTXO must have a value of at least 0.00010000 BTC to be eligible to coinjoin. If you are stuck at 99% privacy progress, check the "Wallet Coins" menu to see if you have a UTXO with a value that is too low to participate. Hovering over the shield icon in the transaction preview screen helps you avoid creating small change UTXOs from payments you send.
