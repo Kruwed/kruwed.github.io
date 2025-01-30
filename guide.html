@@ -18,7 +18,7 @@
     <div class="content">
         <h1>Bitcoin Privacy Guide</h1>
         <p>
-        Bitcoin is a verifiable public ledger. You can follow the history of any coins spent in a transaction all the way back to when a miner initially created those coins from a block. Blockchain transactions can often be analyzed to link addresses used by the same person together. Coinjoin transactions can be used to defeat these analyzation tactics and protect financial privacy.
+        Bitcoin is a verifiable public ledger. You can follow the history of any coins spent in a transaction all the way back to when a miner initially created those coins from a block. Blockchain transactions can often be analyzed to link different addresses used by the same person together. Coinjoin transactions can be used to defeat these analyzation tactics and protect financial privacy.
 <br>
 <br>
 <i>Here we are faced with the problems of loss of privacy, creeping computerization, massive databases, more centralization - and Chaum offers a completely different direction to go in, one which puts power into the hands of individuals rather than governments and corporations. The computer can be used as a tool to liberate and protect people, rather than to control them.</i> - Hal Finney
@@ -27,13 +27,13 @@
         <p>
            Regardless of whether you are using Bitcoin or some other Internet connected application, your IP address is revealed when communicating over the network. An IP address will indicate your physical location and potentially other personal information collected by your provider.<br>
             <br>
-            Tor is a network that encrypts your traffic to mask your IP address. Connections over Tor are wrapped with 3 layers (like an onion) and passed through a network of relays. Each relay only can see one layer at a time, so no one can view the origin or destination of the traffic. Click <a href="https://donate.torproject.org/">here</a> to donate to the Tor project.<br>
+            <a href="https://metrics.torproject.org/">Tor</a> is a network that encrypts your traffic to mask your IP address. Connections over Tor are wrapped with 3 layers (like an onion) and passed through a network of relays. Each relay only can see one layer at a time, so no one can view the origin or destination of the traffic.
             <br>
-            Wasabi Wallet uses Tor by default for every operation. Each transaction broadcasted, block downloaded, coinjoin input registered, and coinjoin output registered uses a brand new IP address, so your actions can't be linked together using network analyzation.
+            Wasabi Wallet uses Tor by default for every operation. Each transaction broadcasted, block downloaded, coinjoin input registered, and coinjoin output registered uses a brand new IP address so your actions can't be linked together using network analyzation.
         </p>
         <h2>Synchronization privacy</h2>
         <p>
-          In order to know how much money is in your wallet, you need to know the current state of the Bitcoin blockchain. This requires either running a full node to check yourself like BTCPay Server or JoinMarket, or asking someone else's full node to check for you. Many light wallets share your entire transaction history with a third party server to look up your balance. This can leak even more information about your transactions to the server than what is already publicly visible on the blockchain.<br>
+          In order to know how much money is in your wallet, you need to know the current state of the Bitcoin blockchain. This requires either running a full node to check yourself like BTCPay Server or JoinMarket, or asking someone else's full node to check for you. Many light wallets share your entire transaction history with a third party server to look up your balance. This can leak even more information about your transactions to the server beyond what is already publicly visible on the blockchain.<br>
           <br>
           Wasabi Wallet synchronizes in a lightweight way without your sharing addresses with anyone. <a href="https://github.com/bitcoin/bips/blob/master/bip-0157.mediawiki">BIP157</a> and <a href="https://github.com/bitcoin/bips/blob/master/bip-0158.mediawiki">BIP158</a> describe how compact block filters are used to reduce the amount of data required to synchronize by ~99%. Your client scans these filters for transactions that belong to you and downloads the exact blocks that contain them.
         </p>
