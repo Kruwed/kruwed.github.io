@@ -17,7 +17,6 @@
     </nav>
     <div class="content">
         <h1>Need help? Ask for support here!</h1>
-
         <p>
             Wasabi docs: <a href="https://bitcointalk.org/index.php?topic=5476197.0">https://docs.wasabiwallet.io/</a><br>
             Github: <a href="https://github.com/WalletWasabi/WalletWasabi/discussions">https://github.com/WalletWasabi/WalletWasabi/discussions</a><br>
@@ -25,35 +24,27 @@
             Discord: <a href="https://discord.gg/nm7YHEZnJs">https://discord.gg/nm7YHEZnJs</a><br>
             Reddit: <a href="https://www.reddit.com/r/WasabiWallet/">https://www.reddit.com/r/WasabiWallet/</a><br>
             Bitcointalk: <a href="https://bitcointalk.org/index.php?topic=5476197.0">https://bitcointalk.org/index.php?topic=5476197.0</a><br>
-<br>
-There are many scammers impersonating admins and moderators on these platforms - NEVER give your wallet's 12 word recovery phrase to ANYONE!
+        <br>
+        There are many scammers impersonating admins and moderators on these platforms - NEVER give your wallet's 12 word recovery phrase to ANYONE!
         </p>
 
         <h1>Frequently Asked Questions</h1>
         
         <h2>I tried to recover my wallet, why is the transaction history blank?</h2>
         <p>
-           When recovering your wallet using the 12 word seed phrase, you have to use the exact same passphrase that you chose when creating the original wallet. The passphrase acts as the "13th word" of your recovery seed, write it down and do not forget it.
+        When recovering your wallet using the 12 word seed phrase, you have to use the exact same passphrase that you chose when creating the original wallet. The passphrase acts as the "13th word" of your recovery seed, write it down and do not forget it.
         </p>
-        <h2>Why is my transaction taking a long time to confirm?</h2>
-        <p>
-           Miners choose to confirm the highest bidding transactions based on their fee rate (measured in sats/vbyte). You can add fees to speed up an unconfirmed transaction by clicking the rocket icon next to it in your transaction history.<br>
-            <br>
-            Each additional input and output included in a transaction increases its size, which requires more fees to be paid. Coinjoins are very large transactions with many inputs and outputs, so it is expensive to speed them up.
-        </p>
-
-        <h2>The timer in the coinjoin box counted down and then reset, why didn't my privacy progress % increase?</h2>
+        <h2>The timer in the coinjoin box counted down and then reset, why didn't the coinjoin complete?</h2>
         <p>
         All of the participants in a coinjoin have to sign it in order for the transaction to be valid. If someone enters a coinjoin and disconnects before signing it, it will cause the timer to reset for the other participants. Non-signers are temporarily blocked from participating in the next round, so honest users with stable Internet connections will eventually build a successful coinjoin.
         </p>
-
-        <h2>My privacy progress is stuck at 99%, why does it say "Insufficient funds eligible for coinjoin"?</h2>
+        <h2>Are there limits on coinjoining?</h2>
         <p>
-        A UTXO must have a value of at least 0.00010000 BTC to be eligible to coinjoin. If you are stuck at 99% privacy progress, check the "Wallet Coins" menu to see if you have a UTXO with a value that is too low to participate. Hovering over the shield icon in the transaction preview screen helps you avoid creating small change UTXOs from payments you send.
+        A UTXO must have a value of at least 0.00010000 BTC to coinjoin. If you are stuck at 99% privacy progress, check the "Wallet Coins" menu to see if you have a UTXO with a value that is too low to participate. Hovering over the shield icon in the transaction preview screen helps you avoid creating small change UTXOs from payments you send.
+<br>
+<br>The maximum input value allowed in a coinjoin 1,343.75 BTC.
         </p>
-
     </div>
-
  <footer id="footer">
         <p><a href="https://wasabiwallet.io/">Wasabi Wallet</a> || <a href="https://coinjoin.kruw.io/wabisabi/human-monitor">Coinjoin Round Status</a></p>
     </footer>
