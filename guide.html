@@ -21,18 +21,16 @@
         <p>
         When recovering your wallet using the 12 word seed phrase, you have to use the exact same passphrase that you chose when creating the original wallet. The passphrase acts as the "13th word" of your recovery seed, write it down and do not forget it.
         </p>
-        <h2>The timer in the coinjoin box counted down and then reset, why didn't the coinjoin complete?</h2>
+        <h2>The countdown in the coinjoin box reset, why didn't my coinjoin complete?</h2>
         <p>
-        All of the participants in a coinjoin have to sign it in order for the transaction to be valid. If someone enters a coinjoin and disconnects before signing it, it will cause the timer to reset for the other participants. Non-signers are temporarily blocked from participating in the next round, so honest users with stable Internet connections will eventually build a successful coinjoin.
+        All of the participants in a coinjoin have to sign it in order for the transaction to be valid. When someone enters a coinjoin and disconnects before signing it, it will cause the timer to restart for the other participants. Non-signers are temporarily blocked from participating in the next round, so honest users with stable Internet connections will eventually build a successful coinjoin.
         </p>
         <h2>Are there limits on coinjoining?</h2>
         <p>
-        A UTXO must have a value of at least 0.00010000 BTC to coinjoin. If you are stuck at 99% privacy progress, check the "Wallet Coins" menu to see if you have a UTXO with a value that is too low to participate. Hovering over the shield icon in the transaction preview screen helps you avoid creating small change UTXOs from payments you send.
-<br>
-<br>The maximum input value allowed in a coinjoin 1,343.75 BTC.
+        A UTXO must have a value of at least 0.00010000 BTC to coinjoin. If you are stuck at 99% privacy progress, check the "Wallet Coins" menu to see if you have a UTXO with a value that is too low to participate. Hovering over the shield icon in the transaction preview screen helps you avoid creating small change UTXOs from payments you send. The maximum input value allowed in a coinjoin 1,343.75 BTC.
         </p>
         <h2>Can I coinjoin from my hardware wallet?</h2>
-Linux or MacOS users can also unlock the coinjoin account on their <a href="https://wasabi.kravens.nl/#trezor">Trezor</a> hardware wallet. The feature is no longer maintained, so there is no support available if you choose to enable it.
+Linux or MacOS users can also unlock the coinjoin account on their <a href="https://wasabi.kravens.nl/#trezor">Trezor</a> hardware wallet. This open source feature is no longer maintained, so there is no support available if you choose to enable it.
 <br>
         <h1>Bitcoin Privacy Guide</h1>
         <p>
