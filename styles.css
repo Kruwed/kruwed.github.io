@@ -4,7 +4,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f0f0f0;
-    background-image: url('images/Background.png'); /* Path to your background image */
+    background-image: url('https://github.com/Kruwed/kruwed.github.io/blob/master/images/Background.png?raw=true'); /* Path to your background image */
     background-size: cover; /* Cover the entire background */
     background-attachment: fixed; /* Fixed background */
 }
@@ -13,7 +13,7 @@ body {
 .header-banner {
     width: 100%;
     height: 120px; /* Adjust to your header image height */
-    background-image: url('images/header-image.jpg'); /* Your header image */
+    background-image: url('https://github.com/Kruwed/kruwed.github.io/blob/master/images/Top%20border.png?raw=true'); /* Your header image */
     background-repeat: repeat-x;
     background-size: auto 100%;
 }
@@ -75,7 +75,7 @@ nav ul li a:hover {
 
 /* Footer styles */
 footer {
-    background-image: url('images/footer-image.jpg'); /* Your footer image */
+    background-image: url('https://github.com/Kruwed/kruwed.github.io/blob/master/images/Bottom%20border.png?raw=true'); /* Your footer image */
     background-repeat: repeat-x;
     background-size: auto 100%;
     height: 80px; /* Adjust to your footer image height */
