@@ -8,17 +8,18 @@ body {
     background-size: cover; /* Cover the entire background */
     background-attachment: fixed; /* Fixed background */
 }
-
 /* Header styles */
 header {
     width: 100%;
-    display: block;
+    background-image: url('images/header-image.jpg');
+    background-repeat: repeat-x; /* Repeat horizontally */
+    background-size: auto 100%; /* Maintain height, auto width for repeating */
+    height: 150px; /* Set an appropriate height for your header */
 }
 
+/* Remove the header image element */
 .header-image {
-    width: 100%;
-    height: auto;
-    display: block;
+    display: none;
 }
 
 h1 {
@@ -77,25 +78,30 @@ nav ul li a:hover {
 
 /* Footer styles */
 footer {
-    background-color: transparent; /* Changed from #333 to transparent */
+    background-color: transparent;
+    background-image: url('images/footer-image.jpg');
+    background-repeat: repeat-x; /* Repeat horizontally */
+    background-size: auto 100%; /* Maintain height, auto width for repeating */
+    height: 80px; /* Set an appropriate height for your footer */
     color: white;
     text-align: center;
     position: fixed;
     bottom: 0;
     width: 100%;
-    padding: 0; /* Removed padding to allow image to fill space */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
+/* Remove the footer image element */
 .footer-image {
-    width: 100%;
-    height: auto;
-    display: block;
+    display: none;
 }
 
 footer p {
     margin: 0;
-    position: relative; /* Position relative to allow text to appear over image */
-    padding: 10px 0; /* Add padding to the text instead */
+    position: relative;
+    z-index: 1; /* Make sure text appears above the background */
 }
 
 button {
