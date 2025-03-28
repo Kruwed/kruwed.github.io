@@ -11,15 +11,42 @@ body {
 /* Header styles */
 header {
     width: 100%;
-    background-image: url('https://raw.githubusercontent.com/Kruwed/kruwed.github.io/refs/heads/master/images/Top%20border.png');
+    background-image: url('images/header-image.jpg');
     background-repeat: repeat-x; /* Repeat horizontally */
     background-size: auto 100%; /* Maintain height, auto width for repeating */
     height: 150px; /* Set an appropriate height for your header */
+    position: relative; /* This allows nav to be positioned relative to header */
+    display: flex;
+    align-items: flex-end; /* Align nav to bottom of header */
 }
 
-/* Remove the header image element */
-.header-image {
-    display: none;
+/* Navigation styles - updated to work within header */
+nav {
+    background-color: rgba(51, 51, 51, 0.7); /* Semi-transparent background */
+    width: 100%; /* Full width of header */
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex; /* Use flexbox for better responsive behavior */
+}
+
+nav ul li {
+    /* Remove float: left; since we're using flexbox */
+}
+
+nav ul li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+nav ul li a:hover {
+    background-color: #111;
 }
 
 h1 {
