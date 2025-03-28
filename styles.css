@@ -9,6 +9,18 @@ body {
     background-attachment: fixed; /* Fixed background */
 }
 
+/* Header styles */
+header {
+    width: 100%;
+    display: block;
+}
+
+.header-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
 h1 {
     color: #000; /* Black color for h1 */
 }
@@ -47,6 +59,7 @@ nav ul li a:hover {
 .content {
     max-width: 1000px; /* Maximum width of the content */
     margin: 20px auto; /* Center the content */
+    margin-bottom: 80px; /* Add space for footer */
     padding: 20px; /* Padding inside the content area */
     background-color: white; /* Background color of the content (solid white) */
     border-left: 1px solid #ccc; /* Left border */
@@ -58,20 +71,31 @@ nav ul li a:hover {
     display: block; /* Make images block elements */
     margin-left: auto; /* Center images horizontally */
     margin-right: auto; /* Center images horizontally */
+    max-width: 100%; /* Make sure images don't overflow their container */
+    height: auto; /* Maintain aspect ratio */
 }
 
+/* Footer styles */
 footer {
-    background-color: #333;
+    background-color: transparent; /* Changed from #333 to transparent */
     color: white;
     text-align: center;
-    padding: 10px 0;
     position: fixed;
     bottom: 0;
     width: 100%;
+    padding: 0; /* Removed padding to allow image to fill space */
+}
+
+.footer-image {
+    width: 100%;
+    height: auto;
+    display: block;
 }
 
 footer p {
     margin: 0;
+    position: relative; /* Position relative to allow text to appear over image */
+    padding: 10px 0; /* Add padding to the text instead */
 }
 
 button {
@@ -94,4 +118,16 @@ a {
 
 a:hover {
     text-decoration: none; /* Remove underline on hover */
+}
+
+/* Media queries for responsiveness */
+@media screen and (max-width: 768px) {
+    nav ul li {
+        float: none;
+        text-align: center;
+    }
+    
+    .content {
+        margin-bottom: 60px; /* Slightly reduced spacing for mobile */
+    }
 }
