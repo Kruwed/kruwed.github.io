@@ -8,45 +8,14 @@ body {
     background-size: cover; /* Cover the entire background */
     background-attachment: fixed; /* Fixed background */
 }
+
 /* Header styles */
-header {
+.header-banner {
     width: 100%;
-    background-image: url('images/header-image.jpg');
-    background-repeat: repeat-x; /* Repeat horizontally */
-    background-size: auto 100%; /* Maintain height, auto width for repeating */
-    height: 150px; /* Set an appropriate height for your header */
-    position: relative; /* This allows nav to be positioned relative to header */
-    display: flex;
-    align-items: flex-end; /* Align nav to bottom of header */
-}
-
-/* Navigation styles - updated to work within header */
-nav {
-    background-color: rgba(51, 51, 51, 0.7); /* Semi-transparent background */
-    width: 100%; /* Full width of header */
-}
-
-nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: flex; /* Use flexbox for better responsive behavior */
-}
-
-nav ul li {
-    /* Remove float: left; since we're using flexbox */
-}
-
-nav ul li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-
-nav ul li a:hover {
-    background-color: #111;
+    height: 120px; /* Adjust to your header image height */
+    background-image: url('images/header-image.jpg'); /* Your header image */
+    background-repeat: repeat-x;
+    background-size: auto 100%;
 }
 
 h1 {
@@ -57,6 +26,7 @@ h2 {
     color: #333; /* Grey color for h2 */
 }
 
+/* Keep your original nav styling */
 nav {
     background-color: #333;
     overflow: hidden;
@@ -87,29 +57,28 @@ nav ul li a:hover {
 .content {
     max-width: 1000px; /* Maximum width of the content */
     margin: 20px auto; /* Center the content */
-    margin-bottom: 80px; /* Add space for footer */
+    margin-bottom: 100px; /* Add space for footer */
     padding: 20px; /* Padding inside the content area */
-    background-color: white; /* Background color of the content (solid white) */
+    background-color: white; /* Background color of the content */
     border-left: 1px solid #ccc; /* Left border */
     border-right: 1px solid #ccc; /* Right border */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: Add some shadow for depth */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow for depth */
 }
 
 .content img {
     display: block; /* Make images block elements */
     margin-left: auto; /* Center images horizontally */
     margin-right: auto; /* Center images horizontally */
-    max-width: 100%; /* Make sure images don't overflow their container */
+    max-width: 100%; /* Ensure images don't overflow */
     height: auto; /* Maintain aspect ratio */
 }
 
 /* Footer styles */
 footer {
-    background-color: transparent;
-    background-image: url('https://raw.githubusercontent.com/Kruwed/kruwed.github.io/refs/heads/master/images/Bottom%20border.png');
-    background-repeat: repeat-x; /* Repeat horizontally */
-    background-size: auto 100%; /* Maintain height, auto width for repeating */
-    height: 80px; /* Set an appropriate height for your footer */
+    background-image: url('images/footer-image.jpg'); /* Your footer image */
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+    height: 80px; /* Adjust to your footer image height */
     color: white;
     text-align: center;
     position: fixed;
@@ -120,15 +89,11 @@ footer {
     justify-content: center;
 }
 
-/* Remove the footer image element */
-.footer-image {
-    display: none;
-}
-
 footer p {
     margin: 0;
-    position: relative;
-    z-index: 1; /* Make sure text appears above the background */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for text */
+    padding: 5px 15px;
+    border-radius: 4px;
 }
 
 button {
@@ -161,6 +126,6 @@ a:hover {
     }
     
     .content {
-        margin-bottom: 60px; /* Slightly reduced spacing for mobile */
+        margin-bottom: 80px; /* Reduced for mobile */
     }
 }
