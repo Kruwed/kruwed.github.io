@@ -1,15 +1,11 @@
-/* styles.css */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f0f0;
-    background-image: url('https://github.com/Kruwed/kruwed.github.io/blob/master/images/Background.png?raw=true'); /* Path to your background image */
-    background-size: cover; /* Cover the entire background */
-    background-attachment: fixed; /* Fixed background */
+/* Add these new styles to your existing CSS file */
+
+/* Remove the original nav bar styling or hide it */
+nav {
+    display: none; /* This hides the original nav bar */
 }
 
-/* Header styles */
+/* Header banner with buttons */
 .header-banner {
     width: 100%;
     height: 120px; /* Adjust to match your header image height */
@@ -42,13 +38,9 @@ body {
     text-decoration: none;
 }
 
-/* Remove the original nav styles since we're not using it anymore */
-nav {
-    display: none;
-}
-
-/* Footer styles */
+/* Footer styling - modify your existing footer styles */
 footer {
+    background-color: transparent; /* Remove the original background color */
     width: 100%;
     height: 80px; /* Adjust based on your footer image height */
     background-image: url('https://raw.githubusercontent.com/Kruwed/kruwed.github.io/refs/heads/master/images/Bottom%20border.png');
@@ -88,7 +80,7 @@ footer {
     text-decoration: none;
 }
 
-/* Add some bottom margin to the content to prevent it from being hidden behind the footer */
+/* Ensure content isn't hidden behind the footer */
 .content {
     margin-bottom: 100px;
 }
