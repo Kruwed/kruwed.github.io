@@ -67,6 +67,8 @@ h2 {
     border-right: 1px solid #ccc; /* Right border */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: Add some shadow for depth */
     text-align: center; /* Center all text */
+    word-wrap: break-word; /* Ensures long strings wrap */
+    overflow-wrap: break-word; /* Modern alternative to word-wrap */
 }
 
 .content img {
@@ -75,6 +77,15 @@ h2 {
     margin-right: auto; /* Center images horizontally */
     max-width: 100%; /* Make sure images don't overflow their container */
     height: auto; /* Maintain aspect ratio */
+}
+
+/* Make code blocks and strings wrap */
+code, i {
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    display: inline-block;
+    max-width: 100%;
 }
 
 /* Footer styling */
@@ -154,5 +165,12 @@ p {
     
     .content {
         padding: 10px;
+        width: auto;
+    }
+    
+    /* Additional mobile-specific fixes */
+    i, code {
+        font-size: 14px; /* Slightly smaller font for long strings */
+        max-width: 100%;
     }
 }
