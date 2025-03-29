@@ -1,131 +1,83 @@
-/* styles.css */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f0f0;
-    background-image: url('https://github.com/Kruwed/kruwed.github.io/blob/master/images/Background.png?raw=true'); /* Path to your background image */
-    background-size: cover; /* Cover the entire background */
-    background-attachment: fixed; /* Fixed background */
-}
-
 /* Header styles */
 .header-banner {
     width: 100%;
-    height: 120px; /* Adjust to your header image height */
-    background-image: url('https://github.com/Kruwed/kruwed.github.io/blob/master/images/Top%20border.png?raw=true'); /* Your header image */
+    height: 120px; /* Adjust to match your header image height */
+    background-image: url('https://raw.githubusercontent.com/Kruwed/kruwed.github.io/refs/heads/master/images/Top%20border.png'); /* Replace with your header image */
     background-repeat: repeat-x;
     background-size: auto 100%;
-}
-
-h1 {
-    color: #000; /* Black color for h1 */
-}
-
-h2 {
-    color: #333; /* Grey color for h2 */
-}
-
-/* Keep your original nav styling */
-nav {
-    background-color: #333;
-    overflow: hidden;
-}
-
-nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
-
-nav ul li {
-    float: left;
-}
-
-nav ul li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-
-nav ul li a:hover {
-    background-color: #111;
-}
-
-.content {
-    max-width: 1000px; /* Maximum width of the content */
-    margin: 20px auto; /* Center the content */
-    margin-bottom: 100px; /* Add space for footer */
-    padding: 20px; /* Padding inside the content area */
-    background-color: white; /* Background color of the content */
-    border-left: 1px solid #ccc; /* Left border */
-    border-right: 1px solid #ccc; /* Right border */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow for depth */
-}
-
-.content img {
-    display: block; /* Make images block elements */
-    margin-left: auto; /* Center images horizontally */
-    margin-right: auto; /* Center images horizontally */
-    max-width: 100%; /* Ensure images don't overflow */
-    height: auto; /* Maintain aspect ratio */
-}
-
-/* Footer styles */
-footer {
-    background-image: url('https://github.com/Kruwed/kruwed.github.io/blob/master/images/Bottom%20border.png?raw=true'); /* Your footer image */
-    background-repeat: repeat-x;
-    background-size: auto 100%;
-    height: 80px; /* Adjust to your footer image height */
-    color: white;
-    text-align: center;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-footer p {
-    margin: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for text */
-    padding: 5px 15px;
-    border-radius: 4px;
+/* Header buttons styling */
+.header-buttons {
+    display: flex;
+    gap: 20px; /* Space between buttons */
 }
 
-button {
+.header-button {
+    background-color: rgba(51, 51, 51, 0.8); /* Semi-transparent background */
+    color: white;
     padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
 }
 
-code {
-    background-color: #f4f4f4;
-    border: 1px solid #ccc;
-    padding: 5px;
-    border-radius: 3px;
+.header-button:hover {
+    background-color: rgba(17, 17, 17, 0.9);
+    text-decoration: none;
 }
 
-a {
-    color: inherit; /* Inherit the color from the parent element */
-    text-decoration: underline; /* Add underline to links */
+/* Remove the original nav styles since we're not using it anymore */
+nav {
+    display: none;
 }
 
-a:hover {
-    text-decoration: none; /* Remove underline on hover */
+/* Footer styles */
+footer {
+    width: 100%;
+    height: 80px; /* Adjust based on your footer image height */
+    background-image: url('https://raw.githubusercontent.com/Kruwed/kruwed.github.io/refs/heads/master/images/Bottom%20border.png');
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Media queries for responsiveness */
-@media screen and (max-width: 768px) {
-    nav ul li {
-        float: none;
-        text-align: center;
-    }
-    
-    .content {
-        margin-bottom: 80px; /* Reduced for mobile */
-    }
+/* Hide the footer image since we're using background-image instead */
+.footer-image {
+    display: none;
+}
+
+/* Footer buttons styling */
+.footer-buttons {
+    display: flex;
+    gap: 20px; /* Space between buttons */
+}
+
+.footer-button {
+    background-color: rgba(51, 51, 51, 0.8); /* Semi-transparent background */
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.footer-button:hover {
+    background-color: rgba(17, 17, 17, 0.9);
+    text-decoration: none;
+}
+
+/* Add some bottom margin to the content to prevent it from being hidden behind the footer */
+.content {
+    margin-bottom: 100px;
 }
