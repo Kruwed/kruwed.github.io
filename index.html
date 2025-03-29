@@ -3,64 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SEO Meta Tags -->
     <title>Wasabi Wallet Coinjoin Coordinator</title>
+    <meta name="description" content="Coinjoin transaction coordinator for Wasabi Wallet. Use Bitcoin anonymously.">
+    <meta name="keywords" content="Wasabi Wallet, Coinjoin, Bitcoin, Privacy, BTC">
+    <meta name="author" content="Kruw">
+    <!-- Open Graph / Social Media Tags -->
+    <meta property="og:title" content="Wasabi Wallet Coinjoin Coordinator">
+    <meta property="og:description" content="Use Bitcoin anonymously.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kruw.io/">
+    <meta property="og:image" content="https://github.com/Kruwed/kruwed.github.io/blob/master/images/Icon%2011.png?raw=true">
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://kruw.io/">
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="https://github.com/Kruwed/kruwed.github.io/blob/master/images/Icon%2011.png?raw=true" type="image/png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Wasabi Wallet Coinjoin Coordinator",
+        "url": "https://kruw.io/",
+        "description": "Coinjoin transaction coordinator for Wasabi Wallet. Use Bitcoin anonymously.",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://kruw.io/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
 </head>
 <body>
-    <!-- Header with buttons instead of navigation -->
-    <div class="header-banner">
-        <div class="header-buttons">
-            <a href="index.html" class="header-button">Coinjoin Coordinator</a>
+    <!-- Header with semantic HTML -->
+    <header class="header-banner">
+        <nav class="header-buttons">
+            <a href="index.html" class="header-button" aria-current="page">Coinjoin Coordinator</a>
             <a href="guide.html" class="header-button">Bitcoin Privacy Guide</a>
-        </div>
-    </div>
+        </nav>
+    </header>
     
-    <div class="content">
-        <h1>Wasabi Wallet Coinjoin Coordinator</h1>
-        <p>I am coordinating coinjoin transactions with my Bitcoin node. You can check the amount of inputs registered to the current round from the <a href="https://coinjoin.kruw.io/wabisabi/human-monitor">monitor</a> and view recent transaction stats from the <a href="https://liquisabi.com">Liquisabi</a> or <a href="https://wabisator.com/">Wabisator</a> coinjoin explorers.</p>
+    <main class="content">
+        <section>
+            <h1>Wasabi Wallet Coinjoin Coordinator</h1>
+            <p>I am coordinating coinjoin transactions with my Bitcoin node. You can check the amount of inputs registered to the current round from the <a href="https://coinjoin.kruw.io/wabisabi/human-monitor" title="Coinjoin Round Monitor">monitor</a> and view recent transaction stats from the <a href="https://liquisabi.com" title="Liquisabi Coinjoin Explorer">Liquisabi</a> or <a href="https://wabisator.com/" title="Wabisator Coinjoin Explorer">Wabisator</a> coinjoin explorers.</p>
+        </section>
         
-        <h2>How to quick connect</h2>
-        <p style="text-align: left;">Copy this string and the coordinator info box will pop up in Wasabi automatically: <i>name=Kruw&network=main&coordinatorUri=https://coinjoin.kruw.io/&readMore=https://kruw.io/&absoluteMinInputCount=21</i></p>
+        <section id="quick-connect">
+            <h2>How to Quick Connect</h2>
+            <p style="text-align: left;">Copy this string and the coordinator info box will pop up in Wasabi automatically: <code>name=Kruw&network=main&coordinatorUri=https://coinjoin.kruw.io/&readMore=https://kruw.io/&absoluteMinInputCount=21</code></p>
 
-        <div class="image-container">
-            <img src="https://raw.githubusercontent.com/Kruwed/kruwed.github.io/refs/heads/master/images/Untitled.png" alt="Quick Connect">
-        </div>
+            <figure class="image-container">
+                <img src="https://raw.githubusercontent.com/Kruwed/kruwed.github.io/refs/heads/master/images/Untitled.png" alt="Wasabi Wallet Quick Connect Interface" width="800" height="450" loading="lazy">
+                <figcaption>Quick Connect Interface in Wasabi Wallet</figcaption>
+            </figure>
+        </section>
         
-        <h2>How to manually connect</h2>
-
-        <p>Go to the Coordinator Settings, then paste <code>https://coinjoin.kruw.io/</code> and click the "Restart Wasabi" text:</p>
+        <section id="manual-connect">
+            <h2>How to Manually Connect</h2>
+            <p>Go to the Coordinator Settings, then paste <code>https://coinjoin.kruw.io/</code> and click the "Restart Wasabi" text:</p>
+            
+            <figure class="image-container">
+                <img src="https://raw.githubusercontent.com/Kruwed/kruwed.github.io/refs/heads/master/images/Settings6.png" alt="Manual Coordinator Settings Configuration" width="800" height="450" loading="lazy">
+                <figcaption>Manual Configuration in Coordinator Settings</figcaption>
+            </figure>
+        </section>
         
-        <div class="image-container">
-            <img src="https://raw.githubusercontent.com/Kruwed/kruwed.github.io/refs/heads/master/images/Settings6.png" alt="Restart Wasabi">
-        </div>
-        
-        <h1>Frequently Asked Questions</h1>
-        <p style="text-align: left;">For more detailed information, check the documentation at <a href="https://docs.wasabiwallet.io/">https://docs.wasabiwallet.io/</a></p>
-        
-        <h2>I tried to recover my wallet, why is the transaction history blank?</h2>
-        <p>
-        When recovering your wallet using the 12 word seed phrase, you have to use the exact same passphrase that you chose when creating the original wallet. The passphrase acts as the "13th word" of your recovery seed, write it down and do not forget it.
-        </p>
-        <h2>The timer in the countdown box reset, why didn't my coinjoin complete?</h2>
-        <p>
-        All of the participants in a coinjoin have to sign it in order for the transaction to be valid. When someone enters a coinjoin and disconnects before signing it, it will cause the timer to restart for the other participants. Non-signers are temporarily blocked from participating in the next round, so honest users with stable Internet connections will eventually build a successful coinjoin.
-        </p>
-        <h2>Are there limits on coinjoining?</h2>
-        <p>
-        A UTXO must have a value of at least 0.00010000 BTC to coinjoin. If you are stuck at 99% privacy progress, check the "Wallet Coins" menu to see if you have a UTXO with a value that is too low to participate. Hovering over the shield icon in the transaction preview screen helps you avoid creating small change UTXOs from payments you send.
-        </p>
-        <h2>Can I coinjoin from my hardware wallet?</h2>
-        <p style="text-align: left;">
-        Linux or MacOS users can unlock the coinjoin account on their <a href="https://wasabi.kravens.nl/#trezor">Trezor</a> hardware wallet. This open source feature is no longer maintained, so there is no support available if you choose to enable it.
-        </p>
-    </div>
+        <section id="faq">
+            <h2>Frequently Asked Questions</h2>
+            <p style="text-align: left;">For more detailed information, check the documentation at <a href="https://docs.wasabiwallet.io/" title="Wasabi Wallet Documentation">https://docs.wasabiwallet.io/</a></p>
+            
+            <article>
+                <h3>I tried to recover my wallet, why is the transaction history blank?</h3>
+                <p>
+                When recovering your wallet using the 12 word seed phrase, you have to use the exact same passphrase that you chose when creating the original wallet. The passphrase acts as the "13th word" of your recovery seed, write it down and do not forget it.
+                </p>
+            </article>
+            
+            <article>
+                <h3>The timer in the countdown box reset, why didn't my coinjoin complete?</h3>
+                <p>
+                All of the participants in a coinjoin have to sign it in order for the transaction to be valid. When someone enters a coinjoin and disconnects before signing it, it will cause the timer to restart for the other participants. Non-signers are temporarily blocked from participating in the next round, so honest users with stable Internet connections will eventually build a successful coinjoin.
+                </p>
+            </article>
+            
+            <article>
+                <h3>Are there limits on coinjoining?</h3>
+                <p>
+                A UTXO must have a value of at least 0.00010000 BTC to coinjoin. If you are stuck at 99% privacy progress, check the "Wallet Coins" menu to see if you have a UTXO with a value that is too low to participate. Hovering over the shield icon in the transaction preview screen helps you avoid creating small change UTXOs from payments you send.
+                </p>
+            </article>
+            
+            <article>
+                <h3>Can I coinjoin from my hardware wallet?</h3>
+                <p style="text-align: left;">
+                Linux or MacOS users can unlock the coinjoin account on their <a href="https://wasabi.kravens.nl/#trezor" title="Trezor Hardware Wallet Guide">Trezor</a> hardware wallet. This open source feature is no longer maintained, so there is no support available if you choose to enable it.
+                </p>
+            </article>
+        </section>
+    </main>
     
     <footer>
-        <div class="footer-buttons">
-            <a href="https://wasabiwallet.io/" class="footer-button">Wasabi Wallet</a>
-            <a href="https://coinjoin.kruw.io/wabisabi/human-monitor" class="footer-button">Coinjoin Round Status</a>
-        </div>
+        <nav class="footer-buttons">
+            <a href="https://wasabiwallet.io/" class="footer-button" title="Official Wasabi Wallet Website">Wasabi Wallet</a>
+            <a href="https://coinjoin.kruw.io/wabisabi/human-monitor" class="footer-button" title="Check Current Coinjoin Round Status">Coinjoin Round Status</a>
+        </nav>
     </footer>
 </body>
 </html>
