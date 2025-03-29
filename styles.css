@@ -18,18 +18,45 @@ body {
 .header-banner {
     width: 100%;
     height: 80px; /* Changed from 120px to 80px to match footer */
-    background-image: url('https://raw.githubusercontent.com/Kruwed/kruwed.github.io/refs/heads/master/images/Top%20border.png');
-    background-repeat: repeat-x;
-    background-size: auto 100%;
+    position: relative; /* For positioning the pseudo-element */
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden; /* Ensures the gradient overlay stays within bounds */
+}
+
+/* Background image for header */
+.header-banner::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://raw.githubusercontent.com/Kruwed/kruwed.github.io/refs/heads/master/images/Top%20border.png');
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+    z-index: -2; /* Behind the gradient */
+}
+
+/* Gradient overlay for header */
+.header-banner::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 15%, rgba(0, 0, 0, 0) 85%, rgba(0, 0, 0, 1) 100%);
+    z-index: -1; /* Above the background image, below the content */
 }
 
 /* Header buttons styling */
 .header-buttons {
     display: flex;
     gap: 20px; /* Space between buttons */
+    position: relative;
+    z-index: 1; /* Ensure buttons appear above the gradient */
 }
 
 /* Header buttons styling with darker background */
@@ -99,14 +126,38 @@ footer {
     background-color: transparent;
     width: 100%;
     height: 80px; /* Height of footer */
-    background-image: url('https://raw.githubusercontent.com/Kruwed/kruwed.github.io/refs/heads/master/images/Bottom%20border.png');
-    background-repeat: repeat-x;
-    background-size: auto 100%;
-    /* Removed position: fixed to allow footer to stay at the bottom of content */
+    position: relative; /* For positioning the pseudo-element */
     display: flex;
     align-items: center;
     justify-content: center;
     margin-top: 0; /* Removed margin top */
+    overflow: hidden; /* Ensures the gradient overlay stays within bounds */
+}
+
+/* Background image for footer */
+footer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://raw.githubusercontent.com/Kruwed/kruwed.github.io/refs/heads/master/images/Bottom%20border.png');
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+    z-index: -2; /* Behind the gradient */
+}
+
+/* Gradient overlay for footer */
+footer::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 15%, rgba(0, 0, 0, 0) 85%, rgba(0, 0, 0, 1) 100%);
+    z-index: -1; /* Above the background image, below the content */
 }
 
 /* Hide the footer image since we're using background-image */
@@ -118,6 +169,8 @@ footer {
 .footer-buttons {
     display: flex;
     gap: 20px; /* Space between buttons */
+    position: relative;
+    z-index: 1; /* Ensure buttons appear above the gradient */
 }
 
 /* Footer buttons styling with darker background */
