@@ -47,19 +47,6 @@
         button:hover {
             background-color: #45a049;
         }
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            margin-left: 10px;
-            border: 3px solid rgba(0,0,0,0.1);
-            border-radius: 50%;
-            border-top-color: #4caf50;
-            animation: spin 1s ease-in-out infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body>
@@ -68,88 +55,52 @@
     <div class="status-card">
         <div class="header">
             <h2>Current Round</h2>
-            <button id="refresh-btn">Refresh</button>
+            <button id="refresh-btn" onclick="location.reload()">Refresh</button>
         </div>
         <div id="round-info">Loading...</div>
     </div>
 
     <script>
-        // Configuration
-        const API_URL = 'https://coinjoin.kruw.io/wabisabi/human-monitor';
-        
-        // Function to fetch data - trying multiple CORS proxies
-        async function fetchRoundData() {
-            const refreshBtn = document.getElementById('refresh-btn');
-            const roundInfo = document.getElementById('round-info');
+        // Using a very simple iframe-based approach
+        function loadData() {
+            // Create an invisible iframe
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = 'https://coinjoin.kruw.io/wabisabi/human-monitor';
             
-            // Show loading state
-            refreshBtn.disabled = true;
-            refreshBtn.innerHTML = 'Refreshing <span class="loading"></span>';
-            
-            // List of CORS proxies to try in order
-            const proxies = [
-                (url) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-                (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-                (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`
-            ];
-            
-            let success = false;
-            let error = null;
-            
-            // Try each proxy in order until one works
-            for (const proxyFn of proxies) {
-                if (success) break;
-                
+            // When the iframe loads, extract its content
+            iframe.onload = function() {
                 try {
-                    const proxyUrl = proxyFn(API_URL);
-                    const response = await fetch(proxyUrl, {
-                        method: 'GET',
-                        cache: 'no-store', // Force fetch to bypass cache
-                        headers: {
-                            'Cache-Control': 'no-cache',
-                            'Pragma': 'no-cache'
-                        }
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    
-                    let data;
-                    // Different proxies return data in different formats
-                    if (proxyUrl.includes('allorigins')) {
-                        const result = await response.json();
-                        data = JSON.parse(result.contents);
-                    } else {
-                        // Direct JSON for other proxies
-                        data = await response.json();
-                    }
-                    
+                    // Try to get the text content from the iframe
+                    const content = iframe.contentDocument.body.textContent;
+                    // Parse the JSON
+                    const data = JSON.parse(content);
+                    // Display the data
                     displayRoundData(data);
-                    success = true;
-                } catch (e) {
-                    console.error('Error with proxy:', e);
-                    error = e;
-                    // Continue to next proxy
+                } catch (error) {
+                    console.error('Error:', error);
+                    document.getElementById('round-info').innerHTML = 
+                        '<p>Error loading data. Try refreshing the page.</p>';
+                } finally {
+                    // Clean up - remove the iframe
+                    document.body.removeChild(iframe);
                 }
-            }
+            };
             
-            // Reset button state
-            refreshBtn.disabled = false;
-            refreshBtn.innerHTML = 'Refresh';
+            // Handle iframe load errors
+            iframe.onerror = function() {
+                document.getElementById('round-info').innerHTML = 
+                    '<p>Error loading data. Try refreshing the page.</p>';
+                document.body.removeChild(iframe);
+            };
             
-            // If all proxies failed
-            if (!success) {
-                console.error('All proxies failed:', error);
-                roundInfo.innerHTML = 
-                    `<p style="color: red">Error loading data. Please try again later.</p>
-                     <p>Last error: ${error.message}</p>`;
-            }
+            // Add the iframe to the document
+            document.body.appendChild(iframe);
         }
         
         // Function to display the round data
         function displayRoundData(data) {
-            if (!data || !data.roundStates || data.roundStates.length === 0) {
+            if (!data.roundStates || data.roundStates.length === 0) {
                 document.getElementById('round-info').innerHTML = 
                     '<p>No active rounds at the moment.</p>';
                 return;
@@ -181,67 +132,13 @@
             document.getElementById('round-info').innerHTML = html;
         }
         
-        // Alternative method using jsonp-like approach with script tags
-        // This is a fallback if all CORS proxies fail
-        function fetchWithScriptTag() {
-            // Remove any previous script tag
-            const oldScript = document.getElementById('jsonp-script');
-            if (oldScript) {
-                document.body.removeChild(oldScript);
-            }
-            
-            // Create a unique callback name
-            const callbackName = 'jsonpCallback_' + Math.random().toString(36).substring(2, 15);
-            
-            // Add the callback to window
-            window[callbackName] = function(data) {
-                displayRoundData(data);
-                // Clean up
-                delete window[callbackName];
-                document.body.removeChild(document.getElementById('jsonp-script'));
-            };
-            
-            // Create a new script tag
-            const script = document.createElement('script');
-            script.id = 'jsonp-script';
-            script.src = `${API_URL}?callback=${callbackName}&_=${Date.now()}`; // Add timestamp to prevent caching
-            
-            // Handle errors
-            script.onerror = function() {
-                document.getElementById('round-info').innerHTML = 
-                    '<p style="color: red">Error loading data. Please try again later.</p>';
-                delete window[callbackName];
-                document.body.removeChild(script);
-            };
-            
-            // Add to document
-            document.body.appendChild(script);
-        }
+        // Load data when the page loads
+        window.onload = loadData;
         
-        // Initial load
-        document.addEventListener('DOMContentLoaded', function() {
-            fetchRoundData().catch(error => {
-                console.error('Initial load failed:', error);
-                // Try the alternative method if the first method fails
-                fetchWithScriptTag();
-            });
-            
-            // Set up refresh button
-            document.getElementById('refresh-btn').addEventListener('click', function() {
-                fetchRoundData().catch(error => {
-                    console.error('Refresh failed:', error);
-                    fetchWithScriptTag();
-                });
-            });
-        });
-        
-        // Optional: Auto-refresh every 60 seconds
-        setInterval(function() {
-            fetchRoundData().catch(error => {
-                console.error('Auto-refresh failed:', error);
-                // No fallback for auto-refresh to avoid excessive script creation
-            });
-        }, 60000);
+        // Simple refresh: just reload the entire page
+        document.getElementById('refresh-btn').onclick = function() {
+            location.reload();
+        };
     </script>
 </body>
 </html>
