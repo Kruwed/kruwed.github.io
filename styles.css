@@ -1,3 +1,14 @@
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+    background-image: url('https://github.com/Kruwed/kruwed.github.io/blob/master/images/Background.png?raw=true'); /* Path to your background image */
+    background-size: cover; /* Cover the entire background */
+    background-attachment: fixed; /* Fixed background */
+}
+
 /* Header styles */
 .header-banner {
     width: 100%;
