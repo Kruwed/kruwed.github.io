@@ -19,18 +19,7 @@
             margin: 20px 0;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .progress-bar {
-            height: 20px;
-            background-color: #e0e0e0;
-            border-radius: 10px;
-            margin: 10px 0;
-            overflow: hidden;
-        }
-        .progress {
-            height: 100%;
-            background-color: #4caf50;
-            border-radius: 10px;
-        }
+        /* Progress bar styles removed */
         .header {
             display: flex;
             justify-content: space-between;
@@ -120,25 +109,14 @@
             
             const round = data.roundStates[0]; // Get the first round
             
-            let progressPercentage = 0;
-            if (round.inputCount > 0) {
-                // Calculate how full the round is based on current vs max input count
-                // This is just an example - adjust based on your actual requirements
-                progressPercentage = Math.min(100, (round.inputCount / 50) * 100);
-            }
+            // Progress calculation removed
             
             let html = `
-                <p><strong>Round ID:</strong> ${round.roundId.substring(0, 8)}...${round.roundId.substring(round.roundId.length - 8)}</p>
+                <p><strong>Round ID:</strong> ${round.roundId}</p>
                 <p><strong>Phase:</strong> ${round.phase}</p>
                 <p><strong>Input Count:</strong> ${round.inputCount}</p>
-                <p><strong>Max Suggested Amount:</strong> ${round.maxSuggestedAmount}</p>
                 ${round.isBlameRound ? '<p><strong>Blame Round</strong></p>' : ''}
                 ${round.inputRegistrationRemaining ? `<p><strong>Time Remaining:</strong> ${round.inputRegistrationRemaining}</p>` : ''}
-                
-                <p><strong>Progress:</strong></p>
-                <div class="progress-bar">
-                    <div class="progress" style="width: ${progressPercentage}%"></div>
-                </div>
             `;
             
             document.getElementById('round-info').innerHTML = html;
