@@ -156,7 +156,21 @@ a:hover {
 }
 
 p {
+    text-align: left;
+}
+
+/* Keep the quote in the guide page centered */
+p i {
+    display: block;
     text-align: center;
+    margin: 1em 0;
+}
+
+/* Center iframes (videos) */
+.content iframe {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Responsive adjustments for smaller screens */
