@@ -47,6 +47,11 @@
         button:hover {
             background-color: #45a049;
         }
+        .status {
+            margin-top: 10px;
+            font-style: italic;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -55,47 +60,54 @@
     <div class="status-card">
         <div class="header">
             <h2>Current Round</h2>
-            <button id="refresh-btn" onclick="location.reload()">Refresh</button>
+            <button id="refresh-btn">Refresh</button>
         </div>
         <div id="round-info">Loading...</div>
+        <div id="status" class="status"></div>
     </div>
 
     <script>
-        // Using a very simple iframe-based approach
-        function loadData() {
-            // Create an invisible iframe
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = 'https://coinjoin.kruw.io/wabisabi/human-monitor';
+        // Configuration
+        const API_URL = 'https://coinjoin.kruw.io/wabisabi/human-monitor';
+        const PROXY_URL = 'https://api.allorigins.win/get?url=';
+        
+        // Use a timestamp to prevent caching
+        function getProxyUrl() {
+            return PROXY_URL + encodeURIComponent(API_URL) + '&timestamp=' + new Date().getTime();
+        }
+        
+        // Function to update status message
+        function updateStatus(message) {
+            document.getElementById('status').textContent = message;
+        }
+        
+        // Function to fetch data
+        async function fetchRoundData() {
+            updateStatus('Fetching data...');
             
-            // When the iframe loads, extract its content
-            iframe.onload = function() {
-                try {
-                    // Try to get the text content from the iframe
-                    const content = iframe.contentDocument.body.textContent;
-                    // Parse the JSON
-                    const data = JSON.parse(content);
-                    // Display the data
-                    displayRoundData(data);
-                } catch (error) {
-                    console.error('Error:', error);
-                    document.getElementById('round-info').innerHTML = 
-                        '<p>Error loading data. Try refreshing the page.</p>';
-                } finally {
-                    // Clean up - remove the iframe
-                    document.body.removeChild(iframe);
+            try {
+                const response = await fetch(getProxyUrl());
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
                 }
-            };
-            
-            // Handle iframe load errors
-            iframe.onerror = function() {
-                document.getElementById('round-info').innerHTML = 
-                    '<p>Error loading data. Try refreshing the page.</p>';
-                document.body.removeChild(iframe);
-            };
-            
-            // Add the iframe to the document
-            document.body.appendChild(iframe);
+                
+                const data = await response.json();
+                
+                if (!data || !data.contents) {
+                    throw new Error('Invalid response from proxy');
+                }
+                
+                // Parse the JSON content from the proxy response
+                const roundData = JSON.parse(data.contents);
+                displayRoundData(roundData);
+                updateStatus('Data updated at ' + new Date().toLocaleTimeString());
+                return true;
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                updateStatus('Error: ' + error.message + '. Try reloading the page.');
+                return false;
+            }
         }
         
         // Function to display the round data
@@ -111,6 +123,7 @@
             let progressPercentage = 0;
             if (round.inputCount > 0) {
                 // Calculate how full the round is based on current vs max input count
+                // This is just an example - adjust based on your actual requirements
                 progressPercentage = Math.min(100, (round.inputCount / 50) * 100);
             }
             
@@ -126,19 +139,45 @@
                 <div class="progress-bar">
                     <div class="progress" style="width: ${progressPercentage}%"></div>
                 </div>
-                <p>Last updated: ${new Date().toLocaleTimeString()}</p>
             `;
             
             document.getElementById('round-info').innerHTML = html;
         }
         
-        // Load data when the page loads
-        window.onload = loadData;
+        // Set up refresh button with debounce to prevent rapid clicking
+        let isRefreshing = false;
+        document.getElementById('refresh-btn').addEventListener('click', function() {
+            if (isRefreshing) return;
+            
+            isRefreshing = true;
+            this.disabled = true;
+            this.textContent = 'Refreshing...';
+            
+            fetchRoundData().finally(() => {
+                // Re-enable the button after a short delay
+                setTimeout(() => {
+                    this.disabled = false;
+                    this.textContent = 'Refresh';
+                    isRefreshing = false;
+                }, 1000);
+            });
+        });
         
-        // Simple refresh: just reload the entire page
-        document.getElementById('refresh-btn').onclick = function() {
-            location.reload();
-        };
+        // Initial load
+        window.addEventListener('load', function() {
+            fetchRoundData();
+            
+            // Set up fallback - if initial load fails, provide a reload button
+            setTimeout(() => {
+                const roundInfo = document.getElementById('round-info');
+                if (roundInfo.textContent === 'Loading...') {
+                    roundInfo.innerHTML = '<p>Could not load data. <button onclick="location.reload()">Reload Page</button></p>';
+                }
+            }, 10000);
+        });
+        
+        // Optional: Auto-refresh every 60 seconds
+        setInterval(fetchRoundData, 60000);
     </script>
 </body>
 </html>
