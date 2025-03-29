@@ -159,9 +159,15 @@ p {
     text-align: left;
 }
 
-/* Keep the quote in the guide page centered */
+/* Modified quote styling to allow inline attribution */
 p i {
-    display: block;
+    display: inline; /* Changed from block to inline */
+    text-align: center;
+    margin: 0; /* Removed margin to prevent line breaks */
+}
+
+/* For specifically the quote paragraph on the guide page */
+.quote-container {
     text-align: center;
     margin: 1em 0;
 }
@@ -194,6 +200,9 @@ p i {
     /* Additional mobile-specific fixes */
     i, code {
         font-size: 14px; /* Slightly smaller font for long strings */
+        max-width: 100%;
+    }
+}
         max-width: 100%;
     }
 }
