@@ -279,8 +279,14 @@ p i {
     }
     
     /* Additional mobile-specific fixes */
-    i, code {
-        font-size: 14px; /* Slightly smaller font for long strings */
+    code {
+        font-size: 14px; /* Slightly smaller font for code blocks only */
+        max-width: 100%;
+    }
+    
+    /* Make italics text normal size */
+    i {
+        font-size: inherit; /* Inherit font size from parent element */
         max-width: 100%;
     }
 }
