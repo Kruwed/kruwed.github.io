@@ -159,6 +159,11 @@ p {
     text-align: left;
 }
 
+/* Center specific text elements */
+.center-text {
+    text-align: center;
+}
+
 /* Modified quote styling to allow inline attribution */
 p i {
     display: inline; /* Changed from block to inline */
@@ -200,9 +205,6 @@ p i {
     /* Additional mobile-specific fixes */
     i, code {
         font-size: 14px; /* Slightly smaller font for long strings */
-        max-width: 100%;
-    }
-}
         max-width: 100%;
     }
 }
