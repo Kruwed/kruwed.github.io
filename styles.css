@@ -33,7 +33,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('https://raw.githubusercontent.com/Kruwed/kruwed.github.io/refs/heads/master/images/Top%20border.png');
+    background-image: url('https://raw.githubusercontent.com/Kruwed/kruwed.github.io/refs/heads/master/images/image.png');
     background-repeat: repeat-x;
     background-size: auto 100%;
     z-index: -2; /* Behind the gradient */
