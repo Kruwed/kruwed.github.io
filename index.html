@@ -26,10 +26,7 @@
             border-bottom: 1px solid #ddd;
         }
         .cj-status-title { font-weight: bold; color: #000; }
-        .cj-dot { width: 9px; height: 9px; border-radius: 50%; background: #bbb; flex: none; }
-        .cj-dot.live { background: #10b981; animation: cj-pulse 2.4s ease-in-out infinite; }
-        @keyframes cj-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
-        @media (prefers-reduced-motion: reduce) { .cj-dot.live { animation: none; } }
+        .cj-status-refresh { font-style: italic; color: #666; font-size: 0.9em; }
         .cj-round {
             display: grid;
             grid-template-columns: 1fr 130px 180px; /* fixed widths so the numbers never shift when a label changes */
@@ -83,7 +80,7 @@
         <div class="cj-status">
             <div class="cj-status-head">
                 <span class="cj-status-title">Live coinjoin rounds</span>
-                <span class="cj-dot" id="cj-dot" title="Live"></span>
+                <span class="cj-status-refresh">Updates every 10 seconds</span>
             </div>
             <div id="cj-rounds">
                 <div class="cj-empty">Loading round status…</div>
@@ -247,16 +244,13 @@
                 }
 
                 function renderStatus() {
-                    const dot = document.getElementById("cj-dot");
                     const note = document.getElementById("cj-note");
 
                     if (!failed && lastOk) {
-                        dot.classList.add("live");
                         note.hidden = true;
                         return;
                     }
 
-                    dot.classList.remove("live");
                     if (lastOk) {
                         note.hidden = (Date.now() - lastOk) / 1000 < 30;
                     } else {
