@@ -26,15 +26,14 @@
             border-bottom: 1px solid #ddd;
         }
         .cj-status-title { font-weight: bold; color: #000; }
-        .cj-status-updated { display: flex; align-items: center; gap: 7px; color: #666; font-size: 0.9em; }
         .cj-dot { width: 9px; height: 9px; border-radius: 50%; background: #bbb; flex: none; }
         .cj-dot.live { background: #10b981; animation: cj-pulse 2.4s ease-in-out infinite; }
         @keyframes cj-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
         @media (prefers-reduced-motion: reduce) { .cj-dot.live { animation: none; } }
         .cj-round {
             display: grid;
-            grid-template-columns: 1fr auto auto;
-            gap: 0 28px;
+            grid-template-columns: 1fr 130px 180px; /* fixed widths so the numbers never shift when a label changes */
+            gap: 4px 24px;
             align-items: center;
             padding: 12px 14px;
             border-top: 1px solid #ddd;
@@ -53,17 +52,16 @@
             margin-left: 8px;
             vertical-align: 1px;
         }
-        .cj-id { font-family: monospace; font-size: 0.85em; color: #666; margin-top: 2px; word-break: break-all; }
-        .cj-metric { text-align: right; min-width: 96px; }
+        .cj-id { grid-column: 1 / -1; font-family: monospace; font-size: 0.85em; color: #666; word-break: break-all; }
+        .cj-metric { text-align: right; }
         .cj-metric .cj-n { font-size: 1.5em; font-weight: bold; color: #000; line-height: 1.1; }
         .cj-metric .cj-l { color: #666; font-size: 0.8em; }
-        .cj-metric.closing .cj-n { color: #059669; }
         .cj-empty, .cj-note { padding: 14px; color: #666; }
         .cj-note { border-top: 1px solid #ddd; font-size: 0.9em; }
         .cj-note[hidden] { display: none; }
         @media screen and (max-width: 560px) {
             .cj-round { grid-template-columns: 1fr; gap: 6px 0; }
-            .cj-metric { text-align: left; min-width: 0; display: flex; gap: 8px; align-items: baseline; }
+            .cj-metric { text-align: left; display: flex; gap: 8px; align-items: baseline; }
             .cj-metric .cj-n { font-size: 1.2em; }
         }
     </style>
@@ -84,7 +82,7 @@
         <div class="cj-status">
             <div class="cj-status-head">
                 <span class="cj-status-title">Live coinjoin rounds</span>
-                <span class="cj-status-updated"><span class="cj-dot" id="cj-dot"></span><span id="cj-updated">Connecting…</span></span>
+                <span class="cj-dot" id="cj-dot" title="Live"></span>
             </div>
             <div id="cj-rounds">
                 <div class="cj-empty">Loading round status…</div>
@@ -98,6 +96,15 @@
                 const COORDINATOR_URL = "https://coinjoin.kruw.io/wabisabi/human-monitor";
                 const REFRESH_SECONDS = 10;
 
+                // How long each phase after input registration lasts at most, in seconds.
+                // Match these to ConnectionConfirmationTimeout, OutputRegistrationTimeout and
+                // TransactionSigningTimeout in the coordinator's WabiSabiConfig.json.
+                // They drive the "est." countdowns; a phase can finish early when every
+                // participant is done, so those countdowns are estimates.
+                const CONNECTION_CONFIRMATION_SECONDS = 60;
+                const OUTPUT_REGISTRATION_SECONDS = 60;
+                const TRANSACTION_SIGNING_SECONDS = 60;
+
                 const PHASES = {
                     InputRegistration: "Input registration",
                     ConnectionConfirmation: "Connection confirmation",
@@ -105,11 +112,44 @@
                     TransactionSigning: "Transaction signing",
                     Ended: "Ended"
                 };
+                const PHASE_ORDER = ["InputRegistration", "ConnectionConfirmation", "OutputRegistration", "TransactionSigning", "Ended"];
+                const PHASE_SECONDS = {
+                    ConnectionConfirmation: CONNECTION_CONFIRMATION_SECONDS,
+                    OutputRegistration: OUTPUT_REGISTRATION_SECONDS,
+                    TransactionSigning: TRANSACTION_SIGNING_SECONDS
+                };
+                const TIME_LABELS = {
+                    InputRegistration: "left to register",
+                    ConnectionConfirmation: "est. confirming inputs",
+                    OutputRegistration: "est. registering outputs",
+                    TransactionSigning: "est. signing",
+                    Ended: "round ended"
+                };
 
                 let rounds = [];
                 let fetchedAt = 0;   // when the rounds shown were received
                 let lastOk = 0;      // last successful update
                 let failed = false;
+                let phaseSeen = {};  // round id -> { phase, at }: when this page saw the round enter its current phase
+
+                // Order: rounds past input registration first (furthest along at the top),
+                // then blame rounds still registering, then new rounds.
+                function rank(r) {
+                    if (r.phase !== "InputRegistration") return [0, -PHASE_ORDER.indexOf(r.phase)];
+                    return [r.blame ? 1 : 2, 0];
+                }
+
+                function estimatePhaseStart(r) {
+                    const seen = phaseSeen[r.id];
+                    if (seen && seen.phase === r.phase && seen.at) return seen.at; // this page watched the phase begin
+                    // Otherwise work forward from when input registration closed, assuming
+                    // the phases in between ran their full length.
+                    let start = fetchedAt;
+                    if (r.remaining !== null && r.remaining < 0) start = fetchedAt + r.remaining * 1000;
+                    const idx = PHASE_ORDER.indexOf(r.phase);
+                    for (let i = 1; i < idx; i++) start += (PHASE_SECONDS[PHASE_ORDER[i]] || 0) * 1000;
+                    return Math.min(start, fetchedAt);
+                }
 
                 // The coordinator has used both capitalised and lower-case field names over time.
                 function field(obj, name) {
@@ -156,14 +196,9 @@
                     for (const r of rounds) {
                         const row = el("div", "cj-round");
 
-                        const info = el("div");
                         const phase = el("div", "cj-phase", phaseLabel(r.phase));
                         if (r.blame) phase.appendChild(el("span", "cj-tag", "blame round"));
-                        info.appendChild(phase);
-                        const id = el("div", "cj-id", r.id.slice(0, 8) + "…" + r.id.slice(-6));
-                        id.title = r.id;
-                        info.appendChild(id);
-                        row.appendChild(info);
+                        row.appendChild(phase);
 
                         const inputs = el("div", "cj-metric");
                         inputs.appendChild(el("div", "cj-n", String(r.inputs)));
@@ -176,36 +211,35 @@
                         time.appendChild(el("div", "cj-l", ""));
                         row.appendChild(time);
 
+                        row.appendChild(el("div", "cj-id", r.id));
+
                         list.appendChild(row);
                     }
                     tick();
                 }
 
                 function tick() {
-                    const elapsed = (Date.now() - fetchedAt) / 1000;
+                    const now = Date.now();
+                    const elapsed = (now - fetchedAt) / 1000;
                     for (const r of rounds) {
                         const cell = document.querySelector('.cj-metric[data-round="' + r.id + '"]');
                         if (!cell) continue;
                         const n = cell.querySelector(".cj-n");
                         const l = cell.querySelector(".cj-l");
-                        cell.classList.remove("closing");
                         if (r.phase === "InputRegistration" && r.remaining !== null) {
                             const left = r.remaining - elapsed;
-                            if (left > 0) {
-                                n.textContent = formatClock(left);
-                                l.textContent = "left to register";
-                                if (left <= 60) cell.classList.add("closing");
-                            } else {
-                                n.textContent = "0:00";
-                                l.textContent = "registration closing";
-                                cell.classList.add("closing");
-                            }
+                            n.textContent = left > 0 ? formatClock(left) : "0:00";
+                            l.textContent = left > 0 ? TIME_LABELS.InputRegistration : "registration closing";
                         } else if (r.phase === "InputRegistration" && r.remainingRaw) {
                             n.textContent = r.remainingRaw;
-                            l.textContent = "left to register";
+                            l.textContent = TIME_LABELS.InputRegistration;
+                        } else if (PHASE_SECONDS[r.phase]) {
+                            const left = PHASE_SECONDS[r.phase] - (now - r.phaseStart) / 1000;
+                            n.textContent = "~" + formatClock(left);
+                            l.textContent = TIME_LABELS[r.phase];
                         } else {
                             n.textContent = "—";
-                            l.textContent = "registration closed";
+                            l.textContent = TIME_LABELS[r.phase] || "registration closed";
                         }
                     }
                     renderStatus();
@@ -213,24 +247,18 @@
 
                 function renderStatus() {
                     const dot = document.getElementById("cj-dot");
-                    const text = document.getElementById("cj-updated");
                     const note = document.getElementById("cj-note");
 
                     if (!failed && lastOk) {
-                        const ago = Math.max(0, Math.round((Date.now() - lastOk) / 1000));
                         dot.classList.add("live");
-                        text.textContent = ago < 2 ? "Updated just now" : "Updated " + ago + " s ago";
                         note.hidden = true;
                         return;
                     }
 
                     dot.classList.remove("live");
                     if (lastOk) {
-                        const ago = Math.round((Date.now() - lastOk) / 1000);
-                        text.textContent = "Last update " + formatClock(ago) + " ago, retrying";
-                        note.hidden = ago < 30;
+                        note.hidden = (Date.now() - lastOk) / 1000 < 30;
                     } else {
-                        text.textContent = "Not connected";
                         document.getElementById("cj-rounds").textContent = "";
                         note.hidden = false;
                     }
@@ -254,6 +282,21 @@
                         fetchedAt = Date.now();
                         lastOk = fetchedAt;
                         failed = false;
+
+                        // Remember when each round entered its current phase.
+                        const nextSeen = {};
+                        for (const r of rounds) {
+                            const prev = phaseSeen[r.id];
+                            if (prev && prev.phase === r.phase) nextSeen[r.id] = prev;
+                            else nextSeen[r.id] = { phase: r.phase, at: prev ? fetchedAt : null };
+                        }
+                        phaseSeen = nextSeen;
+                        for (const r of rounds) r.phaseStart = estimatePhaseStart(r);
+
+                        rounds.sort(function (a, b) {
+                            const ra = rank(a), rb = rank(b);
+                            return (ra[0] - rb[0]) || (ra[1] - rb[1]);
+                        });
                         renderRounds();
                     } catch (err) {
                         failed = true;
