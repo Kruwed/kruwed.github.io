@@ -94,15 +94,6 @@
                 const COORDINATOR_URL = "https://coinjoin.kruw.io/wabisabi/human-monitor";
                 const REFRESH_SECONDS = 5;
 
-                // How long each phase after input registration lasts at most, in seconds.
-                // Match these to ConnectionConfirmationTimeout, OutputRegistrationTimeout and
-                // TransactionSigningTimeout in the coordinator's WabiSabiConfig.json.
-                // They drive the "est." countdowns; a phase can finish early when every
-                // participant is done, so those countdowns are estimates.
-                const CONNECTION_CONFIRMATION_SECONDS = 60;
-                const OUTPUT_REGISTRATION_SECONDS = 60;
-                const TRANSACTION_SIGNING_SECONDS = 60;
-
                 const PHASES = {
                     InputRegistration: "Input registration",
                     ConnectionConfirmation: "Connection confirmation",
@@ -111,42 +102,17 @@
                     Ended: "Ended"
                 };
                 const PHASE_ORDER = ["InputRegistration", "ConnectionConfirmation", "OutputRegistration", "TransactionSigning", "Ended"];
-                const PHASE_SECONDS = {
-                    ConnectionConfirmation: CONNECTION_CONFIRMATION_SECONDS,
-                    OutputRegistration: OUTPUT_REGISTRATION_SECONDS,
-                    TransactionSigning: TRANSACTION_SIGNING_SECONDS
-                };
-                const TIME_LABELS = {
-                    InputRegistration: "left to register",
-                    ConnectionConfirmation: "est. confirming inputs",
-                    OutputRegistration: "est. registering outputs",
-                    TransactionSigning: "est. signing",
-                    Ended: "round ended"
-                };
 
                 let rounds = [];
                 let fetchedAt = 0;   // when the rounds shown were received
                 let lastOk = 0;      // last successful update
                 let failed = false;
-                let phaseSeen = {};  // round id -> { phase, at }: when this page saw the round enter its current phase
 
                 // Order: rounds past input registration first (furthest along at the top),
                 // then blame rounds still registering, then new rounds.
                 function rank(r) {
                     if (r.phase !== "InputRegistration") return [0, -PHASE_ORDER.indexOf(r.phase)];
                     return [r.blame ? 1 : 2, 0];
-                }
-
-                function estimatePhaseStart(r) {
-                    const seen = phaseSeen[r.id];
-                    if (seen && seen.phase === r.phase && seen.at) return seen.at; // this page watched the phase begin
-                    // Otherwise work forward from when input registration closed, assuming
-                    // the phases in between ran their full length.
-                    let start = fetchedAt;
-                    if (r.remaining !== null && r.remaining < 0) start = fetchedAt + r.remaining * 1000;
-                    const idx = PHASE_ORDER.indexOf(r.phase);
-                    for (let i = 1; i < idx; i++) start += (PHASE_SECONDS[PHASE_ORDER[i]] || 0) * 1000;
-                    return Math.min(start, fetchedAt);
                 }
 
                 // The coordinator has used both capitalised and lower-case field names over time.
@@ -205,7 +171,7 @@
 
                         const time = el("div", "cj-metric");
                         time.dataset.round = r.id;
-                        time.appendChild(el("div", "cj-n", "—"));
+                        time.appendChild(el("div", "cj-n", ""));
                         time.appendChild(el("div", "cj-l", ""));
                         row.appendChild(time);
 
@@ -217,27 +183,24 @@
                 }
 
                 function tick() {
-                    const now = Date.now();
-                    const elapsed = (now - fetchedAt) / 1000;
+                    const elapsed = (Date.now() - fetchedAt) / 1000;
                     for (const r of rounds) {
                         const cell = document.querySelector('.cj-metric[data-round="' + r.id + '"]');
                         if (!cell) continue;
                         const n = cell.querySelector(".cj-n");
                         const l = cell.querySelector(".cj-l");
                         if (r.phase === "InputRegistration" && r.remaining !== null) {
+                            // The only countdown shown: it comes straight from the coordinator.
                             const left = r.remaining - elapsed;
                             n.textContent = left > 0 ? formatClock(left) : "0:00";
-                            l.textContent = left > 0 ? TIME_LABELS.InputRegistration : "registration closing";
+                            l.textContent = left > 0 ? "left to register" : "registration closing";
                         } else if (r.phase === "InputRegistration" && r.remainingRaw) {
                             n.textContent = r.remainingRaw;
-                            l.textContent = TIME_LABELS.InputRegistration;
-                        } else if (PHASE_SECONDS[r.phase]) {
-                            const left = PHASE_SECONDS[r.phase] - (now - r.phaseStart) / 1000;
-                            n.textContent = "~" + formatClock(left);
-                            l.textContent = TIME_LABELS[r.phase];
+                            l.textContent = "left to register";
                         } else {
-                            n.textContent = "—";
-                            l.textContent = TIME_LABELS[r.phase] || "registration closed";
+                            // Later phases have no timer from the coordinator, so no number is shown.
+                            n.textContent = "";
+                            l.textContent = r.phase === "Ended" ? "round ended" : "registration closed";
                         }
                     }
                     renderStatus();
@@ -277,16 +240,6 @@
                         fetchedAt = Date.now();
                         lastOk = fetchedAt;
                         failed = false;
-
-                        // Remember when each round entered its current phase.
-                        const nextSeen = {};
-                        for (const r of rounds) {
-                            const prev = phaseSeen[r.id];
-                            if (prev && prev.phase === r.phase) nextSeen[r.id] = prev;
-                            else nextSeen[r.id] = { phase: r.phase, at: prev ? fetchedAt : null };
-                        }
-                        phaseSeen = nextSeen;
-                        for (const r of rounds) r.phaseStart = estimatePhaseStart(r);
 
                         rounds.sort(function (a, b) {
                             const ra = rank(a), rb = rank(b);
