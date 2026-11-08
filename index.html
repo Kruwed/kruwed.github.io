@@ -6,6 +6,67 @@
     <title>Wasabi Wallet Coinjoin Coordinator</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="https://github.com/Kruwed/kruwed.github.io/blob/master/images/Icon%2011.png?raw=true" type="image/png">
+    <style>
+        /* Live coinjoin round status (data from the coordinator's human-monitor endpoint) */
+        .cj-status {
+            text-align: left;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background: #fafafa;
+            margin: 10px auto 24px;
+            max-width: 760px;
+            font-variant-numeric: tabular-nums;
+        }
+        .cj-status-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-bottom: 1px solid #ddd;
+        }
+        .cj-status-title { font-weight: bold; color: #000; }
+        .cj-status-updated { display: flex; align-items: center; gap: 7px; color: #666; font-size: 0.9em; }
+        .cj-dot { width: 9px; height: 9px; border-radius: 50%; background: #bbb; flex: none; }
+        .cj-dot.live { background: #10b981; animation: cj-pulse 2.4s ease-in-out infinite; }
+        @keyframes cj-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+        @media (prefers-reduced-motion: reduce) { .cj-dot.live { animation: none; } }
+        .cj-round {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 0 28px;
+            align-items: center;
+            padding: 12px 14px;
+            border-top: 1px solid #ddd;
+            background: #fff;
+        }
+        .cj-round:first-child { border-top: 0; }
+        .cj-phase { font-weight: bold; color: #000; }
+        .cj-tag {
+            display: inline-block;
+            font-size: 0.75em;
+            font-weight: normal;
+            padding: 1px 8px;
+            border-radius: 999px;
+            background: #eee;
+            color: #555;
+            margin-left: 8px;
+            vertical-align: 1px;
+        }
+        .cj-id { font-family: monospace; font-size: 0.85em; color: #666; margin-top: 2px; word-break: break-all; }
+        .cj-metric { text-align: right; min-width: 96px; }
+        .cj-metric .cj-n { font-size: 1.5em; font-weight: bold; color: #000; line-height: 1.1; }
+        .cj-metric .cj-l { color: #666; font-size: 0.8em; }
+        .cj-metric.closing .cj-n { color: #059669; }
+        .cj-empty, .cj-note { padding: 14px; color: #666; }
+        .cj-note { border-top: 1px solid #ddd; font-size: 0.9em; }
+        .cj-note[hidden] { display: none; }
+        @media screen and (max-width: 560px) {
+            .cj-round { grid-template-columns: 1fr; gap: 6px 0; }
+            .cj-metric { text-align: left; min-width: 0; display: flex; gap: 8px; align-items: baseline; }
+            .cj-metric .cj-n { font-size: 1.2em; }
+        }
+    </style>
 </head>
 <body>
     <!-- Header with buttons instead of navigation -->
@@ -18,18 +79,210 @@
     
     <div class="content">
         <h1>Wasabi Wallet Coinjoin Coordinator</h1>
-        <p>I am coordinating coinjoin transactions with my Bitcoin node. You can check the amount of inputs registered to the current round from the <a href="https://coinjoin.kruw.io/wabisabi/human-monitor">monitor</a> and view recent transaction stats from the <a href="https://liquisabi.com">Liquisabi</a> or <a href="https://wabisator.com">Wabisator</a> coinjoin explorers.</p>
+
+        <!-- Live coinjoin round status: polls the coordinator every 10 seconds -->
+        <div class="cj-status">
+            <div class="cj-status-head">
+                <span class="cj-status-title">Live coinjoin rounds</span>
+                <span class="cj-status-updated"><span class="cj-dot" id="cj-dot"></span><span id="cj-updated">Connecting…</span></span>
+            </div>
+            <div id="cj-rounds">
+                <div class="cj-empty">Loading round status…</div>
+            </div>
+            <div class="cj-note" id="cj-note" hidden>Live status is unavailable right now. The raw data is still available from the <a href="https://coinjoin.kruw.io/wabisabi/human-monitor">monitor</a>.</div>
+        </div>
+
+        <script>
+            (function () {
+                // Settings
+                const COORDINATOR_URL = "https://coinjoin.kruw.io/wabisabi/human-monitor";
+                const REFRESH_SECONDS = 10;
+
+                const PHASES = {
+                    InputRegistration: "Input registration",
+                    ConnectionConfirmation: "Connection confirmation",
+                    OutputRegistration: "Output registration",
+                    TransactionSigning: "Transaction signing",
+                    Ended: "Ended"
+                };
+
+                let rounds = [];
+                let fetchedAt = 0;   // when the rounds shown were received
+                let lastOk = 0;      // last successful update
+                let failed = false;
+
+                // The coordinator has used both capitalised and lower-case field names over time.
+                function field(obj, name) {
+                    if (obj[name] !== undefined) return obj[name];
+                    const lower = name.charAt(0).toLowerCase() + name.slice(1);
+                    return obj[lower];
+                }
+
+                function parseRemaining(text) {
+                    // "0d 0h 32m 59s"; the parts go negative once registration has closed.
+                    const m = /(-?\d+)d\s+(-?\d+)h\s+(-?\d+)m\s+(-?\d+)s/.exec(text || "");
+                    if (!m) return null;
+                    return (+m[1]) * 86400 + (+m[2]) * 3600 + (+m[3]) * 60 + (+m[4]);
+                }
+
+                function formatClock(seconds) {
+                    seconds = Math.max(0, Math.round(seconds));
+                    const h = Math.floor(seconds / 3600);
+                    const m = Math.floor((seconds % 3600) / 60);
+                    const s = seconds % 60;
+                    const mm = String(m).padStart(2, "0");
+                    const ss = String(s).padStart(2, "0");
+                    return h ? h + ":" + mm + ":" + ss : m + ":" + ss;
+                }
+
+                function phaseLabel(phase) {
+                    return PHASES[phase] || String(phase || "").replace(/([a-z])([A-Z])/g, "$1 $2");
+                }
+
+                function el(tag, className, text) {
+                    const node = document.createElement(tag);
+                    if (className) node.className = className;
+                    if (text !== undefined) node.textContent = text;
+                    return node;
+                }
+
+                function renderRounds() {
+                    const list = document.getElementById("cj-rounds");
+                    list.textContent = "";
+                    if (!rounds.length) {
+                        list.appendChild(el("div", "cj-empty", "No rounds are open right now."));
+                        return;
+                    }
+                    for (const r of rounds) {
+                        const row = el("div", "cj-round");
+
+                        const info = el("div");
+                        const phase = el("div", "cj-phase", phaseLabel(r.phase));
+                        if (r.blame) phase.appendChild(el("span", "cj-tag", "blame round"));
+                        info.appendChild(phase);
+                        const id = el("div", "cj-id", r.id.slice(0, 8) + "…" + r.id.slice(-6));
+                        id.title = r.id;
+                        info.appendChild(id);
+                        row.appendChild(info);
+
+                        const inputs = el("div", "cj-metric");
+                        inputs.appendChild(el("div", "cj-n", String(r.inputs)));
+                        inputs.appendChild(el("div", "cj-l", r.inputs === 1 ? "input registered" : "inputs registered"));
+                        row.appendChild(inputs);
+
+                        const time = el("div", "cj-metric");
+                        time.dataset.round = r.id;
+                        time.appendChild(el("div", "cj-n", "—"));
+                        time.appendChild(el("div", "cj-l", ""));
+                        row.appendChild(time);
+
+                        list.appendChild(row);
+                    }
+                    tick();
+                }
+
+                function tick() {
+                    const elapsed = (Date.now() - fetchedAt) / 1000;
+                    for (const r of rounds) {
+                        const cell = document.querySelector('.cj-metric[data-round="' + r.id + '"]');
+                        if (!cell) continue;
+                        const n = cell.querySelector(".cj-n");
+                        const l = cell.querySelector(".cj-l");
+                        cell.classList.remove("closing");
+                        if (r.phase === "InputRegistration" && r.remaining !== null) {
+                            const left = r.remaining - elapsed;
+                            if (left > 0) {
+                                n.textContent = formatClock(left);
+                                l.textContent = "left to register";
+                                if (left <= 60) cell.classList.add("closing");
+                            } else {
+                                n.textContent = "0:00";
+                                l.textContent = "registration closing";
+                                cell.classList.add("closing");
+                            }
+                        } else if (r.phase === "InputRegistration" && r.remainingRaw) {
+                            n.textContent = r.remainingRaw;
+                            l.textContent = "left to register";
+                        } else {
+                            n.textContent = "—";
+                            l.textContent = "registration closed";
+                        }
+                    }
+                    renderStatus();
+                }
+
+                function renderStatus() {
+                    const dot = document.getElementById("cj-dot");
+                    const text = document.getElementById("cj-updated");
+                    const note = document.getElementById("cj-note");
+
+                    if (!failed && lastOk) {
+                        const ago = Math.max(0, Math.round((Date.now() - lastOk) / 1000));
+                        dot.classList.add("live");
+                        text.textContent = ago < 2 ? "Updated just now" : "Updated " + ago + " s ago";
+                        note.hidden = true;
+                        return;
+                    }
+
+                    dot.classList.remove("live");
+                    if (lastOk) {
+                        const ago = Math.round((Date.now() - lastOk) / 1000);
+                        text.textContent = "Last update " + formatClock(ago) + " ago, retrying";
+                        note.hidden = ago < 30;
+                    } else {
+                        text.textContent = "Not connected";
+                        document.getElementById("cj-rounds").textContent = "";
+                        note.hidden = false;
+                    }
+                }
+
+                async function load() {
+                    try {
+                        const response = await fetch(COORDINATOR_URL, { cache: "no-store" });
+                        if (!response.ok) throw new Error("HTTP " + response.status);
+                        const data = await response.json();
+                        rounds = (field(data, "RoundStates") || []).map(function (x) {
+                            return {
+                                id: String(field(x, "RoundId") || ""),
+                                blame: !!field(x, "IsBlameRound"),
+                                inputs: Number(field(x, "InputCount")) || 0,
+                                phase: field(x, "Phase"),
+                                remaining: parseRemaining(field(x, "InputRegistrationRemaining")),
+                                remainingRaw: field(x, "InputRegistrationRemaining")
+                            };
+                        });
+                        fetchedAt = Date.now();
+                        lastOk = fetchedAt;
+                        failed = false;
+                        renderRounds();
+                    } catch (err) {
+                        failed = true;
+                        console.error("Coinjoin status: could not load " + COORDINATOR_URL, err);
+                        renderStatus();
+                    }
+                }
+
+                load();
+                setInterval(load, REFRESH_SECONDS * 1000);
+                setInterval(tick, 1000);
+                document.addEventListener("visibilitychange", function () {
+                    if (!document.hidden) load();
+                });
+            })();
+        </script>
+
+        <p>I am coordinating coinjoin transactions with my Bitcoin node. The status of the current rounds is shown live above, straight from the coordinator's <a href="https://coinjoin.kruw.io/wabisabi/human-monitor">monitor</a>, and you can view recent transaction stats from the <a href="https://liquisabi.com">Liquisabi</a> or <a href="https://wabisator.com">Wabisator</a> coinjoin explorers.</p>
 
         <h2>How to quick connect</h2>
        
         Copy this string and the coordinator info box will pop up in Wasabi automatically:
 
         <p style="text-align: left; display: flex; align-items: center; gap: 12px; font-size: 1.1em;">            
-            <code id="coordinatorString" style="background: #f0f0f0; padding: 4px 8px; border-radius: 4px; font-family: monospace;">
+            <code id="coordinatorString" style="background: #f0f0f0; padding: 4px 8px; border-radius: 4px; font-family: monospace; flex: 1; min-width: 0;">
             name=Kruw&network=main&coordinatorUri=https://coinjoin.kruw.io/&readMore=https://kruw.io/&absoluteMinInputCount=21
         </code>
             <button id="copyBtn"
-                style="padding: 6px 12px; cursor: pointer; border: 1px solid #ccc; background: #fff; border-radius: 6px; display: flex; align-items: center; gap: 6px; transition: all 0.2s;">
+                style="padding: 6px 12px; cursor: pointer; border: 1px solid #ccc; background: #fff; border-radius: 6px; display: flex; align-items: center; gap: 6px; transition: all 0.2s; flex: none;">
                 <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
