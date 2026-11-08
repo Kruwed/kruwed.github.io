@@ -76,11 +76,11 @@
         <h1>Wasabi Wallet Coinjoin Coordinator</h1>
         <p>I am coordinating coinjoin transactions with my Bitcoin node. You can view recent transaction stats from the <a href="https://liquisabi.com">Liquisabi</a> or <a href="https://wabisator.com">Wabisator</a> coinjoin explorers.</p>
 
-        <!-- Live coinjoin round status: polls the coordinator every 10 seconds -->
+        <!-- Live coinjoin round status: polls the coordinator every 5 seconds -->
         <div class="cj-status">
             <div class="cj-status-head">
                 <span class="cj-status-title">Live coinjoin rounds</span>
-                <span class="cj-status-refresh">Updates every 10 seconds</span>
+                <span class="cj-status-refresh">Updates every 5 seconds</span>
             </div>
             <div id="cj-rounds">
                 <div class="cj-empty">Loading round status…</div>
@@ -92,7 +92,7 @@
             (function () {
                 // Settings
                 const COORDINATOR_URL = "https://coinjoin.kruw.io/wabisabi/human-monitor";
-                const REFRESH_SECONDS = 10;
+                const REFRESH_SECONDS = 5;
 
                 // How long each phase after input registration lasts at most, in seconds.
                 // Match these to ConnectionConfirmationTimeout, OutputRegistrationTimeout and
