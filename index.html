@@ -99,7 +99,7 @@
                     ConnectionConfirmation: "Connection confirmation",
                     OutputRegistration: "Output registration",
                     TransactionSigning: "Transaction signing",
-                    Ended: "Ended"
+                    Ended: "Round Ended"
                 };
                 const PHASE_ORDER = ["InputRegistration", "ConnectionConfirmation", "OutputRegistration", "TransactionSigning", "Ended"];
 
@@ -199,8 +199,10 @@
                             l.textContent = "left to register";
                         } else {
                             // Later phases have no timer from the coordinator, so no number is shown.
+                            // Ended rounds stay listed for a few minutes; the monitor doesn't report
+                            // whether they succeeded, so the label stays neutral.
                             n.textContent = "";
-                            l.textContent = r.phase === "Ended" ? "round ended" : "registration closed";
+                            l.textContent = r.phase === "Ended" ? "" : "Round In Progress";
                         }
                     }
                     renderStatus();
